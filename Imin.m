@@ -33,7 +33,7 @@ for ai=1:NA
 end
 
 % calculate Imin
-Dkl = @(x,y) sum(x(y~=0).*(log2(x(y~=0))-log2(y(y~=0))));
+Dkl = @(x,y) nansum(x(y~=0).*(log2(x(y~=0))-log2(y(y~=0))));
 
 % loop over target values
 minIs = zeros(1,Sm);

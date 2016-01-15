@@ -49,6 +49,10 @@ parents{n('{12}{13}')} = [n('{12}') n('{13}')];
 parents{n('{12}{23}')} = [n('{12}') n('{23}')];
 parents{n('{13}{23}')} = [n('{13}') n('{23}')];
 
+parents{n('{12}')} = n('{123}');
+parents{n('{13}')} = n('{123}');
+parents{n('{23}')} = n('{123}');
+
 % build children for birectional link
 children = cell(1,lat.Nnodes);
 for ni=1:lat.Nnodes

@@ -37,7 +37,7 @@ lat.nodes = nodes;
 lat.parents = parents;
 lat.children = children;
 
-lat.top_nodes = nodes('{12}');
+lat.top = nodes('{12}');
 lat.bottom = nodes('{1}{2}');
 lat.Icap = NaN(1,lat.Nnodes);
 lat.PI = NaN(1,lat.Nnodes);

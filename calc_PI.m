@@ -1,15 +1,19 @@
-function lat = calc_PI(lat)
+function lat = calc_PI(lat,Pjoint,Icap)
 
-if any(isnan(lat.Icap))
-    error('Icap must be calcualted for each node')
+s = size(Pjoint);
+if lat.Nx ~= (length(s)-1)
+    error('Pjoint does not match lattice structure')
 end
+
+% calc Icap for each node
+for ni=1:lat.Nnodes
+    lat.Icap(ni) = Icap(lat.A{ni}, Pjoint);
+end
+
+% use equation (7) from Williams and Beer to calculate
+% PI at each node
 lat.PI = NaN(size(lat.Icap));
-% lat.cumPI = NaN(size(lat.Icap));
-
-% use equation (7) from Williams and Beer
-% so start at the bottom of the lattice
-
-% level 1
+% start at the bottom
 ni = lat.bottom;
 lat.PI(ni) = lat.Icap(ni);
 % recurse up the tree

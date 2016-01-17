@@ -1,5 +1,5 @@
 function Imin = Imin(A, Pjoint)
-
+% calculate redundancy from minimum specific information
 % A - cell array of sources
 % Pjoint - full joint distribution
 

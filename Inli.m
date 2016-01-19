@@ -52,18 +52,45 @@ if NA>1
     for pi=1:Npair
         thsA = [A{pairs(pi,1)} A{pairs(pi,2)}];
         Nv = length(thsA);
-%         A1 = 1:length(A{pairs(pi,1)});
         Nv1 = length(A{pairs(pi,1)});
-%         A2 = (length(A{pairs(pi,1)})+1):length(thsA);
         Nv2 = length(A{pairs(pi,2)});
+
+        % collapse variables we don't need
         sumover = setdiff(vars, thsA);
         Paas = Pjoint;
         for ii=1:length(sumover)
             Paas = sum(Paas, sumover(ii));
         end
+        Paas = squeeze(Paas);
+
+        % reorder axes to match order of unique variables in this pair of
+        % elements
+        % order we want
+        Aunq = unique(thsA,'stable');
+        % order we have
+        [Aunqsrt, Aunqsrtidx] = sort(Aunq);
+        % invert order
+        [~, Aidx] = sort(Aunqsrtidx);
+
+        Paas = permute(Paas, [Aidx length(Aunq)+1]);
+        thsA = changem(thsA, 1:length(Aunq), Aunq);
+        Aunq = unique(thsA, 'stable');
+
+        % copy duplicate variables as required
+        uniquevar_i = 1;
+        for allvar_i=1:Nv
+            if (uniquevar_i>length(Aunq)) || (thsA(allvar_i) ~= Aunq(uniquevar_i))
+                % need to insert a duplicate variable
+                Paas = copy_var(Paas, thsA(allvar_i), allvar_i);
+            else
+                % axis order is correct
+                uniquevar_i = uniquevar_i + 1;
+            end
+        end
+
         % joint distribution over all variables
         % in both pairs of elements
-        Paas = squeeze(Paas);
+        % now should have correct variable axis in correct order
         % collapse A1
         s = size(Paas);
         Paas = reshape(Paas, [prod(s(1:Nv1)) s(Nv1+1:end)]);
@@ -76,19 +103,60 @@ if NA>1
 end
 
 % build triplewise joint element distributions
+% REPEATED AXES ACROSS ELEMENTS??? HOW TO BUILD
+Paaas = cell(1,NA);
 if NA==3
+    thsA = [A{1} A{2} A{3}];
+    Nv = length(thsA);
+    Nv1 = length(A{1});
+    Nv2 = length(A{2});
+    Nv3 = length(A{3});
+
+    % collapse variables we don't need
+    sumover = setdiff(vars, thsA);
     Paaas = Pjoint;
-    s = size(Paaas);
+    for ii=1:length(sumover)
+        Paaas = sum(Paaas, sumover(ii));
+    end
+    Paaas = squeeze(Paaas);
+
+    % relabel to match current Paaa order
+    % (excluding removed variables)
+    thsA = floor(tiedrank(thsA));
+
+    % reorder axes to match order of unique variables in this pair of
+    % elements
+    thsAunq = unique(thsA, 'stable');
+    [~, idx] = sort(thsAunq);
+    Paaas = permute(Paaas, [idx length(thsAunq)+1]);
+    thsA = changem(thsA, 1:length(thsAunq), thsAunq);
+    thsAunq = unique(thsA, 'stable');
+
+    % copy duplicate variables as required
+    uniquevar_i = 1;
+    for allvar_i=1:Nv
+        if (uniquevar_i>length(thsAunq)) || (thsA(allvar_i) ~= thsAunq(uniquevar_i))
+            % need to insert a duplicate variable
+            Paaas = copy_var(Paaas, thsA(allvar_i), allvar_i);
+        else
+            % axis order is correct
+            uniquevar_i = uniquevar_i + 1;
+        end
+    end
+
+    % joint distribution over all variables
+    % now should have correct variable axes in correct order
     % collapse A1
+    s = size(Paaas);
     Nv1 = length(A{1});
     Paaas = reshape(Paaas, [prod(s(1:Nv1)) s(Nv1+1:end)]);
     % collapse A2
     s = size(Paaas);
     Nv2 = length(A{2});
-    Paas = reshape(Paas, [s(1) prod(s(2:Nv2+1)) s(Nv2+2:end)]);
+    Paaas = reshape(Paaas, [s(1) prod(s(2:Nv2+1)) s(Nv2+2:end)]);
     % collapse A3
     s = size(Paaas);
-    Paas = reshape(Paas, [s(1:2) prod(s(3:end-1)) s(end)]);
+    Paaas = reshape(Paaas, [s(1:2) prod(s(3:end-1)) s(end)]);
     Ptrip(1).Paaas = Paaas;
     Ptrip(1).Paaa = squeeze(sum(Paaas,4));
 end
@@ -123,15 +191,59 @@ elseif NA==3
         for a2=1:Am(2)
             for a3=1:Am(3)
                 for si=1:Sm
+                    num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Pele(3).Pa(a3) * Ps(si);
+                    num = num * Ppair(1).Paas(a1,a2,si) * Ppair(2).Paas(a1,a3,si) * Ppair(3).Paas(a2,a3,si);
+                    num = num * Ptrip(1).Paaa(a1,a2,a3);
+
+                    den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Pele(3).Pas(a3,si);
+                    den = den * Ppair(1).Paa(a1,a2) * Ppair(2).Paa(a1,a3) * Ppair(3).Paa(a2,a3);
+                    den = den * Ptrip(1).Paaas(a1,a2,a3,si);
+
+                    ii123 = log2(num ./ den);
+
+                    % pair(1) = 1 2
                     num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
                     den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
-                    pii(a1,a2,a3,si) = log2(num ./ den);
+                    ii12 = log2(num ./ den);
+
+                    % pair(2) = 1 3
+                    num = Pele(1).Pa(a1) * Pele(3).Pa(a3) * Ps(si) * Ppair(2).Paas(a1,a3,si);
+                    den = Pele(1).Pas(a1,si) * Pele(3).Pas(a3,si) * Ppair(2).Paa(a1,a3);
+                    ii13 = log2(num ./ den);
+
+                    % pair(3) = 2 3
+                    num = Pele(2).Pa(a2) * Pele(3).Pa(a3) * Ps(si) * Ppair(3).Paas(a2,a3,si);
+                    den = Pele(2).Pas(a2,si) * Pele(3).Pas(a3,si) * Ppair(3).Paa(a2,a3);
+                    ii23 = log2(num ./ den);
+
+%                     pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23]);
+                    pii(a1,a2,a3,si) = ii123;
                 end
             end
         end
     end
     pii = Ptrip(1).Paaas .* pii;
 end
-
+pii(~isfinite(pii))=0;
+% pii
 locred = -nansum(pii(pii<0));
 Inli = locred;
+
+
+function Pnew = copy_var(P, var, newpos)
+% form joint distribution with variable var copied to axis position newpos
+s = size(P);
+varM = s(var);
+% size of new array
+news = [s(1:newpos-1) varM s(newpos:end)];
+Pnew = zeros(news);
+
+subP = cell(1,ndims(P));
+[subP{:}] = ind2sub(size(P),1:numel(P));
+
+subPnew = [subP(1:newpos-1) subP(var) subP(newpos:end)];
+indPnew = sub2ind(size(Pnew), subPnew{:});
+Pnew(indPnew) = P(:);
+
+
+

@@ -1,13 +1,17 @@
 function lat = calc_PI(lat,Pjoint,Icap)
 
-s = size(Pjoint);
-if lat.Nx ~= (length(s)-1)
-    error('Pjoint does not match lattice structure')
-end
+% if only lat provided calculate PI using existing Icap
+% otherwise, recalculate Icap
+if nargin>1
+    s = size(Pjoint);
+    if lat.Nx ~= (length(s)-1)
+        error('Pjoint does not match lattice structure')
+    end
 
-% calc Icap for each node
-for ni=1:lat.Nnodes
-    lat.Icap(ni) = Icap(lat.A{ni}, Pjoint);
+    % calc Icap for each node
+    for ni=1:lat.Nnodes
+        lat.Icap(ni) = Icap(lat.A{ni}, Pjoint);
+    end
 end
 
 % use equation (7) from Williams and Beer to calculate

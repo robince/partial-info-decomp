@@ -171,7 +171,12 @@ if NA==1
             % = neg local mutual information
             num = Pele(1).Pa(a1) * Ps(si);
             den = Pele(1).Pas(a1,si);
-            pii(a1,si) = log2(num ./ den);
+            if den==0
+                ii = 0;
+            else
+                ii = log2(num ./ den);
+            end
+            pii(a1,si) = ii;
         end
     end
     pii = Pele(1).Pas .* pii;
@@ -181,7 +186,32 @@ elseif NA==2
             for si=1:Sm
                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
-                pii(a1,a2,si) = log2(num ./ den);
+                ii12 = log2(num ./ den);
+%                 if num>0
+%                     dsj = log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) );
+%                     ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
+%                     ds2 = log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) );
+%                     keyboard
+%                 end
+                
+                num = Pele(1).Pa(a1) * Ps(si);
+                den = Pele(1).Pas(a1,si);
+                if den==0
+                    ii1 = 0;
+                else
+                    ii1 = log2(num ./ den);
+                end
+                
+                num = Pele(2).Pa(a2) * Ps(si);
+                den = Pele(2).Pas(a2,si);
+                if den==0
+                    ii2 = 0;
+                else
+                    ii2 = log2(num ./ den);
+                end
+                
+%                 pii(a1,a2,si) = nanmax([ii12 ii1 ii2]);
+                pii(a1,a2,si) = ii12;
             end
         end
     end
@@ -215,16 +245,43 @@ elseif NA==3
                     num = Pele(2).Pa(a2) * Pele(3).Pa(a3) * Ps(si) * Ppair(3).Paas(a2,a3,si);
                     den = Pele(2).Pas(a2,si) * Pele(3).Pas(a3,si) * Ppair(3).Paa(a2,a3);
                     ii23 = log2(num ./ den);
+                    
+                    num = Pele(1).Pa(a1) * Ps(si);
+                    den = Pele(1).Pas(a1,si);
+                    if den==0
+                        ii1 = 0;
+                    else
+                        ii1 = log2(num ./ den);
+                    end
+                    
+                    num = Pele(2).Pa(a2) * Ps(si);
+                    den = Pele(2).Pas(a2,si);
+                    if den==0
+                        ii2 = 0;
+                    else
+                        ii2 = log2(num ./ den);
+                    end
+                    
+                    num = Pele(3).Pa(a3) * Ps(si);
+                    den = Pele(3).Pas(a3,si);
+                    if den==0
+                        ii3 = 0;
+                    else
+                        ii3 = log2(num ./ den);
+                    end
 
-%                     pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23]);
-                    pii(a1,a2,a3,si) = ii123;
+%                     pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23 ii1 ii2 ii3]);
+                    % max over sub-pairs enforces monoticity
+                    pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23]);
+%                     pii(a1,a2,a3,si) = ii123;
+
                 end
             end
         end
     end
     pii = Ptrip(1).Paaas .* pii;
 end
-pii(~isfinite(pii))=0;
+% pii(~isfinite(pii))=0;
 % pii
 locred = -nansum(pii(pii<0));
 Inli = locred;

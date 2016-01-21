@@ -1,4 +1,4 @@
-function Inli = Inli(A, Pjoint)
+function Inli = Inlii(A, Pjoint)
 % calculate redundancy from negative local interaction information
 % A - cell array of elements
 % Pjoint - full joint distribution
@@ -20,6 +20,9 @@ Ps = Pjoint;
 for xi=1:Nx
     Ps = squeeze(sum(Ps,1));
 end
+
+% sort elements 
+A = cellfun(@sort, A, 'Unif',false);
 
 % build distributions for each element
 for ai=1:NA
@@ -81,7 +84,9 @@ if NA>1
         for allvar_i=1:Nv
             if (uniquevar_i>length(Aunq)) || (thsA(allvar_i) ~= Aunq(uniquevar_i))
                 % need to insert a duplicate variable
-                Paas = copy_var(Paas, thsA(allvar_i), allvar_i);
+                var_needed = thsA(allvar_i);
+                copy_from = find(thsA==var_needed,1);
+                Paas = copy_var(Paas, copy_from, allvar_i);
             else
                 % axis order is correct
                 uniquevar_i = uniquevar_i + 1;
@@ -120,24 +125,27 @@ if NA==3
     end
     Paaas = squeeze(Paaas);
 
-    % relabel to match current Paaa order
-    % (excluding removed variables)
-    thsA = floor(tiedrank(thsA));
-
     % reorder axes to match order of unique variables in this pair of
     % elements
-    thsAunq = unique(thsA, 'stable');
-    [~, idx] = sort(thsAunq);
-    Paaas = permute(Paaas, [idx length(thsAunq)+1]);
-    thsA = changem(thsA, 1:length(thsAunq), thsAunq);
-    thsAunq = unique(thsA, 'stable');
+    % order we want
+    Aunq = unique(thsA,'stable');
+    % order we have
+    [Aunqsrt, Aunqsrtidx] = sort(Aunq);
+    % invert order
+    [~, Aidx] = sort(Aunqsrtidx);
+
+    Paaas = permute(Paaas, [Aidx length(Aunq)+1]);
+    thsA = changem(thsA, 1:length(Aunq), Aunq);
+    Aunq = unique(thsA, 'stable');
 
     % copy duplicate variables as required
     uniquevar_i = 1;
     for allvar_i=1:Nv
-        if (uniquevar_i>length(thsAunq)) || (thsA(allvar_i) ~= thsAunq(uniquevar_i))
+        if (uniquevar_i>length(Aunq)) || (thsA(allvar_i) ~= Aunq(uniquevar_i))
             % need to insert a duplicate variable
-            Paaas = copy_var(Paaas, thsA(allvar_i), allvar_i);
+            var_needed = thsA(allvar_i);
+            copy_from = find(thsA==var_needed,1);
+            Paaas = copy_var(Paaas, copy_from, allvar_i);
         else
             % axis order is correct
             uniquevar_i = uniquevar_i + 1;
@@ -245,7 +253,7 @@ elseif NA==3
                     num = Pele(2).Pa(a2) * Pele(3).Pa(a3) * Ps(si) * Ppair(3).Paas(a2,a3,si);
                     den = Pele(2).Pas(a2,si) * Pele(3).Pas(a3,si) * Ppair(3).Paa(a2,a3);
                     ii23 = log2(num ./ den);
-                    
+
                     num = Pele(1).Pa(a1) * Ps(si);
                     den = Pele(1).Pas(a1,si);
                     if den==0
@@ -253,7 +261,7 @@ elseif NA==3
                     else
                         ii1 = log2(num ./ den);
                     end
-                    
+
                     num = Pele(2).Pa(a2) * Ps(si);
                     den = Pele(2).Pas(a2,si);
                     if den==0
@@ -261,7 +269,7 @@ elseif NA==3
                     else
                         ii2 = log2(num ./ den);
                     end
-                    
+
                     num = Pele(3).Pa(a3) * Ps(si);
                     den = Pele(3).Pas(a3,si);
                     if den==0
@@ -272,8 +280,12 @@ elseif NA==3
 
 %                     pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23 ii1 ii2 ii3]);
                     % max over sub-pairs enforces monoticity
-                    pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23]);
-%                     pii(a1,a2,a3,si) = ii123;
+%                     pii(a1,a2,a3,si) = nanmax([ii123 ii12 ii13 ii23]);
+                    % direct interaction information (not monotonic)
+                    pii(a1,a2,a3,si) = ii123;
+%                     if nansum(nanmax([ii123 ii12 ii13 ii23])) ~= nansum(nanmax(ii123)) && Ptrip(1).Paaas(a1,a2,a3,si)~=0
+%                         keyboard
+%                     end
 
                 end
             end

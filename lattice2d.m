@@ -8,6 +8,7 @@ lat.elements = {1, 2, [1 2]};
 
 lat.A = { {1 2}, {1}, {2}, {[1 2]} };
 % lat.labels = { '{1}{2}', '{1}', '{2}', '{12}' }
+lat.level = [1 2 2 3];
 labels = cell(size(lat.A));
 for ni=1:lat.Nnodes
     thsA = lat.A{ni};

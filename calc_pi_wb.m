@@ -1,4 +1,4 @@
-function lat = calc_PI(lat,Pjoint,Icap)
+function lat = calc_pi_wb(lat,Pjoint,Icap)
 % Calculate PI on a redundancy lattice using Williams and Beer summation
 
 % if only lat provided calculate PI using existing Icap

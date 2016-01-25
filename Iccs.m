@@ -209,7 +209,7 @@ elseif NA==2
 
                     if sign(overlap)==sign(ds1)
                         % redundant (mis)information
-                        if abs(overlap) > max(abs([ds1 ds2]))
+                        if isfinite(overlap) && abs(overlap) > max(abs([ds1 ds2]))
                             fprintf(1,'Warning [%d %d %d] : Overlap larger than individuals. overlap: %6.3f ds1: %6.3f  ds2: %6.3f\n',a1,a2,si,overlap,ds1,ds2)
                         end
                         cds(a1,a2,si) = overlap;
@@ -243,7 +243,7 @@ elseif NA==3
                         overlap = ds1 + ds2 + ds3 - ds12 - ds13 - ds23 + ds123;
                         if sign(overlap)==sign(ds1)
                             % redundant (mis)information
-                            if abs(overlap) > max(abs([ds1 ds2 ds3]))
+                            if isfinite(overlap) && abs(overlap) > max(abs([ds1 ds2 ds3]))
                                 fprintf(1,'Warning [%d %d %d %d] : Overlap larger than individual overlap: %6.3f ds1: %6.3f  ds2: %6.3f  ds3: %6.3f\n',a1,a2,a3,si,overlap,ds1,ds2,ds3)
                             end
                             cds(a1,a2,a3,si) = overlap;

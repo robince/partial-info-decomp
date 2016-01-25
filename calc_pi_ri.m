@@ -49,6 +49,7 @@ end
 deltas(deltas<0) = 0;
 pi = min(deltas);
 all_children = unique(recurse_children(lat,ni,[]));
+
 if pi>0
     % contributing input nodes
     idx = isclosefp(deltas,pi);
@@ -68,23 +69,26 @@ if pi>0
         Nnondis = 1;
         nondis_input_nodes = [];
     end
-    
 
     if N>1
         % normalise pi
         % should it be by N inputs or sum inputs??
         % how should combine factors from multiple parents?
         pi = (N*pi) ./ Nnondis;
+        % backpropogate normalisation factor to non-disjoint input nodes
         lat.backprop(nondis_input_nodes) = lat.backprop(nondis_input_nodes) .* (1./Nnondis);
+        % with disjoint inputs (2d lattice) by summing the equal input
+        % deltas we've overcounted Icap
+        pi = pi - (N-Nnondis)*lat.Icap(ni);
     end
-    all_children = setdiff(all_children,nondis_input_nodes);
+    all_children = setdiff(all_children,input_nodes);
 end
 
 thsPI = pi - sum(lat.PI(all_children));
 lat.PI(ni) = max(thsPI,0);
 % ni
 % lat.PI
-% if ni==4
+% if ni==8
 %     keyboard
 % end
 

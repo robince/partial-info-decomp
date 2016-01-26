@@ -53,7 +53,7 @@ Pxxxy(1,2,1,1) = p;
 Pxxxy(2,1,2,1) = p;
 Pxxxy(2,2,2,2) = p;
 
-fprintf(1,'XORDUPLICATE Griffith at al. (2012) Fig. 5\n')
+fprintf(1,'ANDDUPLICATE Griffith at al. (2012) Fig. 10\n')
 lat = compare(lattice3d(),Pxxxy);
 
 %% 2 bit xor, with independent extra bit

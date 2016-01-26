@@ -29,20 +29,20 @@ Pxxy(2,1,3) = p;
 Pxxy(2,2,1) = p;
 Pxxy(1,2,3) = p;
 
-fprintf(1,'Williams and Beer Fig 4 Modified\n')
+fprintf(1,'Williams and Beer Fig 4 Modified 1\n')
 compare(lattice2d(),Pxxy);
 
 %% W&B FIGURE 4 MODIFIED D
 Pxxy = zeros(2,2,3);
 p = 1/5;
 Pxxy(1,1,1) = p;
-Pxxy(1,2,2) = p'
+Pxxy(1,2,2) = p;
 Pxxy(2,2,2) = p;
 Pxxy(2,1,3) = p;
 Pxxy(2,2,1) = p;
 % Pxxy(1,2,3) = p;
 
-fprintf(1,'Williams and Beer Fig 4 Modified\n')
+fprintf(1,'Williams and Beer Fig 4 Modified 2\n')
 compare(lattice2d(),Pxxy);
 
 %% one bit copy
@@ -152,7 +152,7 @@ Pxxy(1,2,1) = 0.001;
 Pxxy(2,2,2) = 0.5;
 
 fprintf(1,'IMPERFECTRDN Griffith (2014) Fig 3\n');
-compare(lattice2d(),Pxxy);
+lat = compare(lattice2d(),Pxxy);
 % NB: shows higher {1}{2} than Imin! This is because {2} has unique
 % misinformation
 

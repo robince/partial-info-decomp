@@ -16,7 +16,7 @@ end
 %     display_nonzero_terms(lat)
 % end
 
-lat = calc_pi_ri(lat, P, @Iccs_indjoint);
+lat = calc_pi_normalise_levels_children(lat, P, @Iccs_indjoint);
 PIccs = lat.PI;
 arr = sprintf('%6.4f ',PIccs);
 fprintf(1,'PI with Iccs: [ %s ]\n',arr);

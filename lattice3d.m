@@ -15,6 +15,8 @@ lat.A = {
     {[1 2]};         {[1 3]};         {[2 3]};
     {[1 2 3]} }';
 lat.level = [1 2 2 2 3 3 3 4 4 4 4 5 5 5 6 6 6 7];
+lat.Nlevels = max(lat.level);
+
 labels = cell(size(lat.A));
 for ni=1:lat.Nnodes
     thsA = lat.A{ni};

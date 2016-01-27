@@ -16,14 +16,13 @@ end
 %     display_nonzero_terms(lat)
 % end
 
-lat = calc_pi_normalise_levels_children(lat, P, @Iccs_indjoint);
+lat = calc_pi(lat, P, @Iccs);
 PIccs = lat.PI;
 arr = sprintf('%6.4f ',PIccs);
 fprintf(1,'PI with Iccs: [ %s ]\n',arr);
 if lat.Nx==3
     display_nonzero_terms(lat)
 end
-
 
 isclosefp = @(a,b) abs(a - b) <= eps(max(abs(a), abs(b)));
 assert(isclosefp(sum(lat.PI),lat.Icap(end)));

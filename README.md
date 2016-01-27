@@ -29,7 +29,7 @@ where `Icap` is one of the redundancy functions.
 The PID can be calulated by passing a lattice, full joint distribution, and function handle to a redundancy function to one of the `calc_pi` functions. 
 These implement different summation strategies over the lattice. 
 
-A range of examples are implemented in the scripts (`examples_2d.m`)[examples_2d.m] and (`examples_3d.m`)[examples_3d.m]. 
+A range of examples are implemented in the scripts [`examples_2d.m`](examples_2d.m) and [`examples_3d.m`](examples_3d.m). 
 
 ### Main functions
 

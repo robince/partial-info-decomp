@@ -1,7 +1,6 @@
 # local_interaction
 
-This folder implements a redundancy measure based on pointwise common change of surprisal.
-It also implements a partial information decomposition based  n this measure.
+This folder implements a redundancy measure based on pointwise common change of surprisal and a partial information decomposition based on this measure.
 
 For comparison the original `Imin` of [Williams and Beer (2010)](http://arxiv.org/abs/1004.2515) is also implemented.
 

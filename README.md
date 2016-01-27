@@ -30,6 +30,8 @@ The PID can be calulated by passing a lattice, full joint distribution, and func
 These implement different summation strategies over the lattice. 
 
 A range of examples are implemented in the scripts [`examples_2d.m`](examples_2d.m) and [`examples_3d.m`](examples_3d.m). 
+The output of these scripts is in [`examples2d_output.txt`](examples2d_output.txt) and [`examples3d_output.txt`](examples3d_output.txt) respectively.
+
 
 ### Main functions
 

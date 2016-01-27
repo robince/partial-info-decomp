@@ -1,4 +1,4 @@
-function lat = calc_pi_ri(lat,Pjoint,Icap)
+function lat = calc_pi(lat,Pjoint,Icap)
 % Calculate PI on a redundancy lattice using Williams and Beer summation
 % Normalise non-disjoint values across levels for children of a node
 

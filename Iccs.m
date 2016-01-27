@@ -3,6 +3,7 @@ function Iccs = Iccs(A, Pjoint)
 % independent joint-element distributions
 % A - cell array of elements
 % Pjoint - full joint distribution
+
 isclosefp = @(a,b) abs(a - b) <= eps(max(abs(a), abs(b)));
 s = size(Pjoint);
 Sm = s(end); % number of target values
@@ -45,6 +46,7 @@ for ai=1:NA
     Pele(ai).Pas = Pas;
     % unconditional distribution P(a)
     Pele(ai).Pa = squeeze(sum(Pas,2));
+    % conditional distribution P(a|s)
     Pele(ai).Pacs = bsxfun(@rdivide, Pele(ai).Pas, Ps);
     Am(ai) = size(Pas,1);
 end
@@ -69,7 +71,6 @@ if NA>1
 end
 
 % build triplewise joint element distributions
-Paaas = cell(1,NA);
 if NA==3
     Paaacs = zeros(Am(1),Am(2),Am(3),Sm);
     for si=1:Sm
@@ -84,7 +85,6 @@ end
 
 
 % pointwise interaction information
-tmp = zeros([Am Sm]);
 cds = zeros([Am Sm]);
 if NA==1
     for a1=1:Am(1)
@@ -103,9 +103,9 @@ elseif NA==2
                 ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
                 ds2 = log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) );
                 
-                num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
-                den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
-                ii12 = log2(num ./ den);
+%                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
+%                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
+%                 ii12 = log2(num ./ den);
                 
 %                 if Ps(si)>0
 %                     fprintf(1,'[%d %d %d] : dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f  ii: %6.3f\n',a1,a2,si,dsj,ds1,ds2,ii12);
@@ -165,8 +165,6 @@ elseif NA==3
                             cds(a1,a2,a3,si) = overlap;
                         end
                     end
-                    tmp(a1,a2,a3,si) = ds123;
-
                 end
             end
         end

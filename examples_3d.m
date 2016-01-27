@@ -126,3 +126,45 @@ Pxxxy(4,4,4,2) = p;
 fprintf(1,'XORMULTICOAL Griffith at al. (2012) Fig. 11\n')
 lat = compare(lattice3d(),Pxxxy);
 
+%% PARITYRDNRDN : Griffith et al. (2012) Fig. 13
+Pxxxy = zeros(8,8,8,8);
+p = 1/32;
+
+Pxxxy(1,1,1,1) = p;
+Pxxxy(1,1,2,2) = p;
+Pxxxy(1,2,1,2) = p;
+Pxxxy(1,2,2,1) = p;
+Pxxxy(2,1,1,2) = p;
+Pxxxy(2,1,2,1) = p;
+Pxxxy(2,2,1,1) = p;
+Pxxxy(2,2,2,2) = p;
+
+Pxxxy(3,3,3,3) = p;
+Pxxxy(3,3,4,4) = p;
+Pxxxy(3,4,3,4) = p;
+Pxxxy(3,4,4,3) = p;
+Pxxxy(4,3,3,4) = p;
+Pxxxy(4,3,4,3) = p;
+Pxxxy(4,4,3,3) = p;
+Pxxxy(4,4,4,4) = p;
+
+Pxxxy(5,5,5,5) = p;
+Pxxxy(5,5,6,6) = p;
+Pxxxy(5,6,5,6) = p;
+Pxxxy(5,6,6,5) = p;
+Pxxxy(6,5,5,6) = p;
+Pxxxy(6,5,6,5) = p;
+Pxxxy(6,6,5,5) = p;
+Pxxxy(6,6,6,6) = p;
+
+Pxxxy(7,7,7,7) = p;
+Pxxxy(7,7,8,8) = p;
+Pxxxy(7,8,7,8) = p;
+Pxxxy(7,8,8,7) = p;
+Pxxxy(8,7,7,8) = p;
+Pxxxy(8,7,8,7) = p;
+Pxxxy(8,8,7,7) = p;
+Pxxxy(8,8,8,8) = p;
+
+fprintf(1,'PARITYRDNRDN Griffith at al. (2012) Fig. 13\n')
+lat = compare(lattice3d(),Pxxxy);

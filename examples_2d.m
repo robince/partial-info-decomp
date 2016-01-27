@@ -23,7 +23,7 @@ compare(lattice2d(),Pxxy);
 Pxxy = zeros(2,2,3);
 p = 1/6;
 Pxxy(1,1,1) = p;
-Pxxy(1,2,2) = p'
+Pxxy(1,2,2) = p;
 Pxxy(2,2,2) = p;
 Pxxy(2,1,3) = p;
 Pxxy(2,2,1) = p;
@@ -120,7 +120,7 @@ Pxxy(1,2,1) = 0.25;
 Pxxy(2,1,1) = 0.25;
 Pxxy(2,2,2) = 0.25;
 fprintf(1,'AND\n')
-compare(lattice2d(),Pxxy);
+lat = compare(lattice2d(),Pxxy);
 
 %% RNDXOR : Griffith et al. (2014) Fig. 2
 % Griffith et al. (2012) Fig. 8 
@@ -137,10 +137,6 @@ Pxxy(4,4,3) = p;
 
 fprintf(1,'RNDXOR Griffith (2014) Fig 2\n');
 compare(lattice2d(),Pxxy);
-
-lat = lattice2d();
-lat = calc_pi_ri(lat,Pxxy,@Iccs);
-latmin = calc_pi_wb(lat,Pxxy,@Imin);
 
 %% IMPERFECTRDN : Griffith et al. (2014) Fig. 3
 Pxxy = zeros(2,2,2);

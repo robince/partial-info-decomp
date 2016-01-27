@@ -73,13 +73,8 @@ Paaas = cell(1,NA);
 if NA==3
     Paaacs = zeros(Am(1),Am(2),Am(3),Sm);
     for si=1:Sm
-        for a3=1:Am(3)
-            for a2=1:Am(2)
-                for a1=1:Am(1)
-                    Paaacs(a1,a2,a3,si) = Pele(1).Pacs(a1,si) * Pele(2).Pacs(a2,si) * Pele(3).Pacs(a3,si);
-                end
-            end
-        end
+        Paac = Pele(1).Pacs(:,si) * Pele(2).Pacs(:,si)';
+        Paaacs(:,:,:,si) = bsxfun(@times, Paac, reshape(Pele(3).Pacs(:,si), [1 1 Am(3)]));
     end
     Ptrip(1).Paaacs = Paaacs;
     Paaas = bsxfun(@times, Paaacs, reshape(Ps,[1 1 1 Sm]));

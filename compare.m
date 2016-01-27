@@ -24,7 +24,7 @@ if lat.Nx==3
     display_nonzero_terms(lat)
 end
 
-isclosefp = @(a,b) abs(a - b) <= eps(max(abs(a), abs(b)));
+isclosefp = @(a,b) abs(a - b) <= 1e-15;
 assert(isclosefp(sum(lat.PI),lat.Icap(end)));
 
 fprintf(1,'\n');

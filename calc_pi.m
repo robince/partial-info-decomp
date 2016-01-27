@@ -46,6 +46,7 @@ if isempty(children)
     return
 end
 all_children = recurse_children(lat,ni,[]);
+
 normPIchildren = normalise_levels(lat, all_children);
 thsPI = lat.Icap(ni) - sum(normPIchildren);
 thsPI = max(thsPI,0);
@@ -72,7 +73,7 @@ normPI = PIraw;
 for li=1:lat.Nlevels
     nodes = find(levels==li);
     levelPI = PIraw(nodes);
-    posPInodes = nodes(levelPI>0);
+    posPInodes = nodes(levelPI>1e-15);
     posPIelems = A(posPInodes);
     posPIelems = cell2mat([posPIelems{:}]);
     if length(posPIelems) ~= length(unique(posPIelems))
@@ -84,19 +85,20 @@ for li=1:lat.Nlevels
             % special case level 4 for 3 variable lattice
             % one node contains all variables
             fullnode = find(strcmpi(labels,'{12}{13}{23}'));
-            if isempty(fullnode) || PIraw(fullnode)==0
+            if isempty(fullnode) || PIraw(fullnode)<1e-15
                 % all elements at this level are disjoint so no
                 % normalisation required
                 continue
-            else
-                % we have non-disjoint contribution at this level
-                disjoint_nodes = setdiff(posPInodes, fullnode);
-                disjointPI = PIraw(disjoint_nodes);
-                normPI(disjoint_nodes) = disjointPI .* sum(disjointPI) ./ sum(levelPI);
+            elseif length(posPInodes)==1
+                % only {12}{13}{23} is non-zero so no normalization
+                % required
+                continue
             end
+            % only normalise by 2 here even if more posPInodes, because
+            % there are only 2 disjoint copies at this level
+            normPI(posPInodes) = PIraw(posPInodes) ./ 2;
         else
-            % all sources at this level are non-disjoint
-            normPI(posPInodes) = PIraw(posPInodes).^2 ./ sum(levelPI);
+            normPI(posPInodes) = PIraw(posPInodes) ./ length(posPInodes);
         end
     end
 end

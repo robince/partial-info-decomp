@@ -12,7 +12,7 @@ The lattice is implemented as a Matlab structure:
 
 The joint distribution for the system of interest should be structured in an array with an axis for each variable with the privileged (independent) variable as the last axis.
 
-Then the redundancy for any source can be calculated by specifying the source as a cell array of elements, where each element is an array of the constituent variables:
+Then the redundancy for any element can be calculated by providing a cell array of sources, where each source is an array specifying the constituent variables:
 
 ```matlab
 % 3 way redundancy (bottom node) for 3 variable case
@@ -26,7 +26,16 @@ R = Icap({1 [2 3]}, Pxxxy);
 where `Icap` is one of the redundancy functions.
 
 The PID can be calulated by passing a lattice, full joint distribution, and function handle to a redundancy function to one of the `calc_pi` functions. 
-These implement different summation strategies over the lattice. 
+These implement different summation strategies over the lattice:
+
+```matlab
+lat = lattice2d();
+latmin = calc_pi_wb(lat, Pxxy, @Imin);
+latccs = calc_pi(lat, Pxxy, @Iccs);
+lat.labels % labels for each element in the PID
+latmin.PI % Williams and Beer PID
+latccs.PI % CCS based PID
+```
 
 A range of examples are implemented in the scripts [`examples_2d.m`](examples_2d.m) and [`examples_3d.m`](examples_3d.m). 
 The output of these scripts is in [`examples2d_output.txt`](examples2d_output.txt) and [`examples3d_output.txt`](examples3d_output.txt) respectively.

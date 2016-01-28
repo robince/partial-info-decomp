@@ -1,8 +1,10 @@
 function Iccs = Iccs(A, Pjoint)
-% calculate redundancy as from pointwise common change in surprise
-% independent joint-element distributions
-% A - cell array of elements
-% Pjoint - full joint distribution
+% calculate redundancy between a set of sources
+% from pointwise common change in surprise
+% using conditional independent joint-source distributions
+%
+% A - cell array of sources
+% Pjoint - full joint distribution (S last axis)
 
 isclosefp = @(a,b) abs(a - b) <= eps(max(abs(a), abs(b)));
 s = size(Pjoint);
@@ -12,9 +14,9 @@ vars = 1:Nx;
 
 NA = length(A);
 if NA>3
-    error('Inli: only 3 elements supported')
+    error('Iccs: only 3 sources supported')
 end
-Pele(NA).Pa = []; % intialize struct
+PA(NA).Pa = []; % intialize struct
 Am = zeros(1,NA); % number of symbols in each element
 
 % Ps
@@ -23,10 +25,10 @@ for xi=1:Nx
     Ps = squeeze(sum(Ps,1));
 end
 
-% sort elements 
+% sort variables within each source
 A = cellfun(@sort, A, 'Unif',false);
 
-% build distributions for each element
+% build distributions for each source
 for ai=1:NA
     thsA = A{ai};
     Nv = length(thsA);
@@ -43,15 +45,15 @@ for ai=1:NA
 %     Pas = Pas(:,:)';
     s = size(Pas);
     Pas = reshape(Pas, [prod(s(1:end-1)) s(end)]);
-    Pele(ai).Pas = Pas;
+    PA(ai).Pas = Pas;
     % unconditional distribution P(a)
-    Pele(ai).Pa = squeeze(sum(Pas,2));
+    PA(ai).Pa = squeeze(sum(Pas,2));
     % conditional distribution P(a|s)
-    Pele(ai).Pacs = bsxfun(@rdivide, Pele(ai).Pas, Ps);
+    PA(ai).Pacs = bsxfun(@rdivide, PA(ai).Pas, Ps);
     Am(ai) = size(Pas,1);
 end
 
-% build pairwise joint element distributions
+% build pairwise joint source distributions
 if NA>1
     pairs = nchoosek(1:NA,2);
     Npair = size(pairs,1);
@@ -61,7 +63,7 @@ if NA>1
         p2 = pairs(pi,2);
         Ppair(pi).Paacs = zeros(Am(p1),Am(p2),Sm);
         for si=1:Sm
-            Paacs(:,:,si) = Pele(p1).Pacs(:,si) * Pele(p2).Pacs(:,si)';
+            Paacs(:,:,si) = PA(p1).Pacs(:,si) * PA(p2).Pacs(:,si)';
         end
         Ppair(pi).Paacs = Paacs;
         Paas = bsxfun(@times, Paacs, reshape(Ps,[1 1 Sm]));
@@ -70,12 +72,12 @@ if NA>1
     end
 end
 
-% build triplewise joint element distributions
+% build triplewise joint source distributions
 if NA==3
     Paaacs = zeros(Am(1),Am(2),Am(3),Sm);
     for si=1:Sm
-        Paac = Pele(1).Pacs(:,si) * Pele(2).Pacs(:,si)';
-        Paaacs(:,:,:,si) = bsxfun(@times, Paac, reshape(Pele(3).Pacs(:,si), [1 1 Am(3)]));
+        Paac = PA(1).Pacs(:,si) * PA(2).Pacs(:,si)';
+        Paaacs(:,:,:,si) = bsxfun(@times, Paac, reshape(PA(3).Pacs(:,si), [1 1 Am(3)]));
     end
     Ptrip(1).Paaacs = Paaacs;
     Paaas = bsxfun(@times, Paaacs, reshape(Ps,[1 1 1 Sm]));
@@ -89,22 +91,22 @@ cds = zeros([Am Sm]);
 if NA==1
     for a1=1:Am(1)
         for si=1:Sm
-            ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
+            ds1 = log2( PA(1).Pas(a1,si) ./ (PA(1).Pa(a1)*Ps(si)) );
             cds(a1,si) = ds1;
         end
     end
 %     keyboard
-    cds = Pele(1).Pas .* cds;
+    cds = PA(1).Pas .* cds;
 elseif NA==2
     for a1=1:Am(1)
         for a2=1:Am(2)
             for si=1:Sm
                 dsj = log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) );
-                ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
-                ds2 = log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) );
+                ds1 = log2( PA(1).Pas(a1,si) ./ (PA(1).Pa(a1)*Ps(si)) );
+                ds2 = log2( PA(2).Pas(a2,si) ./ (PA(2).Pa(a2)*Ps(si)) );
                 
-%                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
-%                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
+%                 num = PA(1).Pa(a1) * PA(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
+%                 den = PA(1).Pas(a1,si) * PA(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
 %                 ii12 = log2(num ./ den);
                 
 %                 if Ps(si)>0
@@ -142,9 +144,9 @@ elseif NA==3
             for a3=1:Am(3)
                 for si=1:Sm
                     ds123 = log2( Ptrip(1).Paaas(a1,a2,a3,si) / (Ptrip(1).Paaa(a1,a2,a3)*Ps(si)) );
-                    ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
-                    ds2 = log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) );
-                    ds3 = log2( Pele(3).Pas(a3,si) ./ (Pele(3).Pa(a3)*Ps(si)) );
+                    ds1 = log2( PA(1).Pas(a1,si) ./ (PA(1).Pa(a1)*Ps(si)) );
+                    ds2 = log2( PA(2).Pas(a2,si) ./ (PA(2).Pa(a2)*Ps(si)) );
+                    ds3 = log2( PA(3).Pas(a3,si) ./ (PA(3).Pa(a3)*Ps(si)) );
                     ds12 = log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) );
                     ds13 = log2( Ppair(2).Paas(a1,a3,si) / (Ppair(2).Paa(a1,a3)*Ps(si)) );
                     ds23 = log2( Ppair(3).Paas(a2,a3,si) / (Ppair(3).Paa(a2,a3)*Ps(si)) );

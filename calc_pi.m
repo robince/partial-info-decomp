@@ -17,7 +17,7 @@ if nargin>1
 end
 
 if lat.Nx>3
-    error('calc_pi_ri: too many variables')
+    error('calc_pi: too many variables')
 end
 
 % use equation (7) from Williams and Beer to calculate
@@ -74,9 +74,9 @@ for li=1:lat.Nlevels
     nodes = find(levels==li);
     levelPI = PIraw(nodes);
     posPInodes = nodes(levelPI>1e-15);
-    posPIelems = A(posPInodes);
-    posPIelems = cell2mat([posPIelems{:}]);
-    if length(posPIelems) ~= length(unique(posPIelems))
+    posPIvars = A(posPInodes);
+    posPIvars = cell2mat([posPIvars{:}]);
+    if length(posPIvars) ~= length(unique(posPIvars))
         % have non-disjoint positive PI contributions at this level
         
         % using structure of 3rd order lattice (might need more logic to
@@ -86,7 +86,7 @@ for li=1:lat.Nlevels
             % one node contains all variables
             fullnode = find(strcmpi(labels,'{12}{13}{23}'));
             if isempty(fullnode) || PIraw(fullnode)<1e-15
-                % all elements at this level are disjoint so no
+                % all sources at this level are disjoint so no
                 % normalisation required
                 continue
             elseif length(posPInodes)==1

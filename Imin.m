@@ -1,7 +1,9 @@
 function Imin = Imin(A, Pjoint)
-% calculate redundancy from minimum specific information
+% calculate redundancy between a set of sources
+% from minimum specific information
+%
 % A - cell array of sources
-% Pjoint - full joint distribution
+% Pjoint - full joint distribution (S last axis)
 
 s = size(Pjoint);
 Sm = s(end); % number of target values
@@ -9,13 +11,15 @@ Nx = length(s)-1; % number of dependent variables
 vars = 1:Nx;
 
 NA = length(A);
-Pele(NA).Pa = []; % intialize struct
+PA(NA).Pa = []; % intialize struct
 
 % Ps
 Ps = Pjoint;
 for xi=1:Nx
     Ps = squeeze(sum(Ps,1));
 end
+
+A = cellfun(@sort, A, 'Unif',false);
 
 % build distributions for each source
 for ai=1:NA
@@ -28,8 +32,8 @@ for ai=1:NA
     end
     Pas = squeeze(Pas);
     thsPs = reshape(Ps,[ones(1, length(size(Pas))-1) Sm]);
-    Pele(ai).PaCs = bsxfun(@rdivide, Pas, thsPs);
-    Pele(ai).Pa = squeeze(sum(Pas,length(size(Pas))));
+    PA(ai).PaCs = bsxfun(@rdivide, Pas, thsPs);
+    PA(ai).Pa = squeeze(sum(Pas,length(size(Pas))));
 end
 
 % calculate Imin
@@ -42,9 +46,9 @@ for si=1:Sm
     for ai=1:NA
         % deal with matlabs horrible indexing contraints
         % make s axis first
-        s = length(size(Pele(ai).PaCs));
-        PaCs = permute(Pele(ai).PaCs, [s 1:s-1]);
-        Is(ai) = Dkl(PaCs(si,:)', Pele(ai).Pa(:));
+        s = length(size(PA(ai).PaCs));
+        PaCs = permute(PA(ai).PaCs, [s 1:s-1]);
+        Is(ai) = Dkl(PaCs(si,:)', PA(ai).Pa(:));
     end
     minIs(si) = min(Is);
 end

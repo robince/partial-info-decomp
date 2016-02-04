@@ -7,7 +7,7 @@ Pxxy(1,2,2) = 1/3;
 Pxxy(2,1,3) = 1/3;
 
 fprintf(1,'Williams and Beer Fig 4A\n')
-compare(lattice2d(),Pxxy);
+lat = compare(lattice2d(),Pxxy);
 
 %% W&B FIGURE 4B
 Pxxy = zeros(2,2,3);
@@ -98,7 +98,7 @@ Pxxy(1,2,2) = 0.25;
 Pxxy(2,1,2) = 0.25;
 Pxxy(2,2,2) = 0.25;
 fprintf(1,'OR\n')
-compare(lattice2d(),Pxxy);
+lat = compare(lattice2d(),Pxxy);
 
 % lat = lattice2d();
 % lat = calc_pi_ri(lat,Pxxy,@Iccs);
@@ -136,16 +136,16 @@ Pxxy(4,3,4) = p;
 Pxxy(4,4,3) = p;
 
 fprintf(1,'RNDXOR Griffith (2014) Fig 2\n');
-compare(lattice2d(),Pxxy);
+lat = compare(lattice2d(),Pxxy);
 
 %% IMPERFECTRDN : Griffith et al. (2014) Fig. 3
 Pxxy = zeros(2,2,2);
-% Pxxy(1,1,1) = 0.4;
-% Pxxy(1,2,1) = 0.1;
-% Pxxy(2,2,2) = 0.5;
-Pxxy(1,1,1) = 0.499;
-Pxxy(1,2,1) = 0.001;
+Pxxy(1,1,1) = 0.4;
+Pxxy(1,2,1) = 0.1;
 Pxxy(2,2,2) = 0.5;
+% Pxxy(1,1,1) = 0.499;
+% Pxxy(1,2,1) = 0.001;
+% Pxxy(2,2,2) = 0.5;
 
 fprintf(1,'IMPERFECTRDN Griffith (2014) Fig 3\n');
 lat = compare(lattice2d(),Pxxy);

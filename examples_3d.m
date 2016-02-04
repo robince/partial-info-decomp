@@ -56,7 +56,7 @@ Pxxxy(2,2,2,2) = p;
 fprintf(1,'ANDDUPLICATE Griffith at al. (2012) Fig. 10\n')
 lat = compare(lattice3d(),Pxxxy);
 
-%% 2 bit xor, with independent extra bit
+%% XORUNQ : 2 bit xor, with independent extra bit
 Pxxxy = zeros(2,2,2,4);
 
 p = 1/8;

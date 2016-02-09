@@ -28,16 +28,20 @@ lat.PIraw = NaN(size(lat.Icap));
 
 % ascend through levels of the lattice
 Nlevels = max(lat.level);
-for li=1:Nlevels
+for li=1:(Nlevels-1)
     nodes = find(lat.level==li);
     for ni=nodes
         lat = calc_pi_node(lat,ni);
     end
 end
+% don't enforce non-negativitity for top node
+lat = calc_pi_node(lat,lat.top,false);
 
 
-
-function lat = calc_pi_node(lat,ni)
+function lat = calc_pi_node(lat,ni,nonneg)
+if nargin<3
+    nonneg = true;
+end
 children = lat.children{ni};
 if isempty(children)
     % no children
@@ -49,7 +53,9 @@ all_children = recurse_children(lat,ni,[]);
 
 normPIchildren = normalise_levels(lat, all_children);
 thsPI = lat.Icap(ni) - sum(normPIchildren);
-thsPI = max(thsPI,0);
+if nonneg
+    thsPI = max(thsPI,0);
+end
 
 lat.PI(ni) = thsPI;
 lat.PIraw(ni) = thsPI;
@@ -73,7 +79,7 @@ normPI = PIraw;
 for li=1:lat.Nlevels
     nodes = find(levels==li);
     levelPI = PIraw(nodes);
-    posPInodes = nodes(levelPI>1e-15);
+    posPInodes = nodes(abs(levelPI)>1e-15);
     posPIvars = A(posPInodes);
     posPIvars = cell2mat([posPIvars{:}]);
     if length(posPIvars) ~= length(unique(posPIvars))

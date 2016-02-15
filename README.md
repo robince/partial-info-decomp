@@ -49,6 +49,15 @@ The output of these scripts is in [`examples2d_output.txt`](examples2d_output.tx
 - [`Iccs.m`](Iccs.m) : Redundancy measure based on pointwise common change in surprisal.
 - [`calc_pi.m`](calc_pi.m) : Alternative PID decomposition on the lattice which normalises non-zero PI values across non-disjoint nodes of the same height in the lattice, to avoid overcounting.
 
+### Guassian / Multivariate Normal (mvn) functions
+
+The functions below implement the PID for multivariate normal / Gaussian variables (currently only 2 source variables). The input format here is the full covariance matrix of the system, following by a vector `varsizes`, which lists the multivariate structure of each considered variable. I.e. if `size(Cfull) = [6 6]` and `varsizes = [1 3 2]`, this means variable `X<sub>1</sub>` is a univariate Gaussian in the first position in `Cfull`, `X<sub>2</sub>` is a trivaraite Gaussian and `S` is a bivariate Gaussian.
+
+- [`Immi_mvn.m`](Immi_mvn.m) : Redundancy measure based on minumum mutual information (equivalent to Imin for Gaussian sources).
+- [`Iccs_mvn.m`](Iccs_mvn.m) : Redundancy measure based on pointwise common change in surprisal.
+- [`calc_pi_mvn.m`](calc_pi_mvn.m) : Alternative PID decomposition on the lattice which normalises non-zero PI values across non-disjoint nodes of the same height in the lattice, to avoid overcounting.
+- [`examples_2dmvn.m`](examples_2dmvn.m) : Run Gaussian examples.
+
 
 ### Retired experimental functions
 

@@ -122,6 +122,15 @@ Pxxy(2,2,2) = 0.25;
 fprintf(1,'AND\n')
 lat = compare(lattice2d(),Pxxy);
 
+%% SUM
+Pxxy = zeros(2,2,3);
+Pxxy(1,1,1) = 0.25;
+Pxxy(1,2,2) = 0.25;
+Pxxy(2,1,2) = 0.25;
+Pxxy(2,2,3) = 0.25;
+fprintf(1,'SUM\n')
+lat = compare(lattice2d(),Pxxy);
+
 %% RNDXOR : Griffith et al. (2014) Fig. 2
 % Griffith et al. (2012) Fig. 8 
 Pxxy = zeros(4,4,4);
@@ -177,7 +186,7 @@ Pxxy(2,1,3) = 0.25;
 Pxxy(2,2,2) = 0.25;
 
 fprintf(1,'XORAND Bertschinger (2014) Table 1\n');
-compare(lattice2d(),Pxxy);
+lat = compare(lattice2d(),Pxxy);
 
 
 %% RDNUNQXOR : Griffith et al. (2012) Fig 12

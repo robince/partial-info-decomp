@@ -100,11 +100,8 @@ Pxxy(2,2,2) = 0.25;
 fprintf(1,'OR\n')
 lat = compare(lattice2d(),Pxxy);
 
-% lat = lattice2d();
-% lat = calc_pi_ri(lat,Pxxy,@Iccs);
-% latmin = calc_pi_wb(lat,Pxxy,@Imin);
 %% XOR
-% Griffith et al. (2012) Fig 4
+% Griffith & Koch (2014) Fig. 6.5
 Pxxy = zeros(2,2,2);
 Pxxy(1,1,1) = 0.25;
 Pxxy(1,2,2) = 0.25;
@@ -170,12 +167,12 @@ Pxxy(2,2,4) = 1/3;
 fprintf(1,'SUBTLE Griffith (2014) Fig 4\n');
 compare(lattice2d(),Pxxy);
 
-%% RDN : Griffith et al. (2012) Fig. 2
+%% RDN : Griffith & Koch (2014) Fig. 6.3
 Pxxy = zeros(2,2,2);
 Pxxy(1,1,1) = 0.5;
 Pxxy(2,2,2) = 0.5;
 
-fprintf(1,'RDN Griffith (2012) Fig 2\n');
+fprintf(1,'RDN Griffith & Koch (2014) Fig. 6.3\n');
 compare(lattice2d(),Pxxy);
 
 %% XORAND : Bertschinger 2014 Table 1
@@ -189,7 +186,7 @@ fprintf(1,'XORAND Bertschinger (2014) Table 1\n');
 lat = compare(lattice2d(),Pxxy);
 
 
-%% RDNUNQXOR : Griffith et al. (2012) Fig 12
+%% RDNUNQXOR : Griffith & Koch (2014) Fig. 6.12
 Pxxy = zeros(8,8,16);
 p = 1./32;
 Pxxy(1,1,1) = p;
@@ -234,5 +231,5 @@ Pxxy(7,8,16) = p;
 Pxxy(8,7,16) = p;
 Pxxy(8,8,15) = p;
 
-fprintf(1,'RDNUNQXOR Griffith (2012) Fig 2\n');
+fprintf(1,'RDNUNQXOR Griffith & Koch (2014) Fig. 6.12\n');
 compare(lattice2d(),Pxxy);

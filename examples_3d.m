@@ -7,7 +7,7 @@ Pxxxy(2,2,2,2) = 1/2;
 fprintf(1,'RDN: redundant bits\n')
 compare(lattice3d(),Pxxxy);
 
-%% XORDUPLICATE : Griffith et al. (2012) Fig. 5
+%% XORDUPLICATE : Griffith & Koch (2014) Fig. 6.6
 Pxxxy = zeros(2,2,2,2);
 p = 1/4;
 Pxxxy(1,1,1,1) = p;
@@ -15,7 +15,7 @@ Pxxxy(1,2,1,2) = p;
 Pxxxy(2,1,2,2) = p;
 Pxxxy(2,2,2,1) = p;
 
-fprintf(1,'XORDUPLICATE Griffith at al. (2012) Fig. 5\n')
+fprintf(1,'XORDUPLICATE Griffith & Koch (2014) Fig. 6.6\n')
 lat = compare(lattice3d(),Pxxxy);
 
 %% two separate xors
@@ -35,17 +35,17 @@ Pxxxy(2,2,2,1) = p;
 fprintf(1,'Two separate Xors\n')
 lat = compare(lattice3d(),Pxxxy);
 
-%% XORLOSES : Griffith et al. (2012) Fig. 6
+%% XORLOSES : Griffith & Koch (2014) Fig. 6.7
 Pxxxy = zeros(2,2,2,2);
 Pxxxy(1,1,1,1) = 1/4;
 Pxxxy(1,2,2,2) = 1/4;
 Pxxxy(2,1,2,2) = 1/4;
 Pxxxy(2,2,1,1) = 1/4;
 
-fprintf(1,'XORLOSSES Griffith at al. (2012) Fig. 6\n')
+fprintf(1,'XORLOSSES Griffith & Koch (2014) Fig. 6.7\n')
 lat = compare(lattice3d(),Pxxxy);
 
-%% ANDDUPLICATE : Griffith et al. (2012) Fig. 10
+%% ANDDUPLICATE : Griffith & Koch (2014) Fig. 6.13
 Pxxxy = zeros(2,2,2,2);
 p = 1/4;
 Pxxxy(1,1,1,1) = p;
@@ -53,7 +53,7 @@ Pxxxy(1,2,1,1) = p;
 Pxxxy(2,1,2,1) = p;
 Pxxxy(2,2,2,2) = p;
 
-fprintf(1,'ANDDUPLICATE Griffith at al. (2012) Fig. 10\n')
+fprintf(1,'ANDDUPLICATE Griffith & Koch (2014) Fig. 6.13\n')
 lat = compare(lattice3d(),Pxxxy);
 
 %% XORUNQ : 2 bit xor, with independent extra bit
@@ -110,7 +110,7 @@ Pxxxy(2,2,2,2) = 1/8;
 fprintf(1,'3-way AND\n')
 lat = compare(lattice3d(),Pxxxy);
 
-%% XORMULTICOAL : Griffith et al. (2012) Fig. 11
+%% XORMULTICOAL : Griffith & Koch (2014) Fig. 6.14
 Pxxxy = zeros(4,4,4,2);
 p = 1/8;
 Pxxxy(1,1,1,1) = p;
@@ -123,10 +123,10 @@ Pxxxy(2,1,3,2) = p;
 Pxxxy(1,2,2,2) = p;
 Pxxxy(4,4,4,2) = p;
 
-fprintf(1,'XORMULTICOAL Griffith at al. (2012) Fig. 11\n')
+fprintf(1,'XORMULTICOAL Griffith & Koch (2014) Fig. 6.14\n')
 lat = compare(lattice3d(),Pxxxy);
 
-%% PARITYRDNRDN : Griffith et al. (2012) Fig. 13
+%% PARITYRDNRDN : Griffith & Koch (2014) (arXiv version) Fig. 13
 Pxxxy = zeros(8,8,8,8);
 p = 1/32;
 
@@ -166,5 +166,5 @@ Pxxxy(8,7,8,7) = p;
 Pxxxy(8,8,7,7) = p;
 Pxxxy(8,8,8,8) = p;
 
-fprintf(1,'PARITYRDNRDN Griffith at al. (2012) Fig. 13\n')
+fprintf(1,'PARITYRDNRDN Griffith & Koch (arXiv version) Fig. 13\n')
 lat = compare(lattice3d(),Pxxxy);

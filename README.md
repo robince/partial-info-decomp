@@ -10,7 +10,7 @@ The lattice is implemented as a Matlab structure:
 
 `lat = lattice2d();` or `lat = lattice3d()` for 2 or 3 variable decomposition respectively [(Williams and Beer, 2010; Figure 2)](http://arxiv.org/abs/1004.2515).
 
-The joint distribution for the system of interest should be structured in an array with an axis for each variable with the privileged (independent) variable as the last axis.
+The joint distribution for the system of interest should be structured in an array with an axis for each variable with the privileged (target) variable as the last axis.
 
 Then the redundancy for any element can be calculated by providing a cell array of sources, where each source is an array specifying the constituent variables:
 
@@ -51,7 +51,7 @@ The output of these scripts is in [`examples2d_output.txt`](examples2d_output.tx
 
 ### Guassian / Multivariate Normal (mvn) functions
 
-The functions below implement the PID for multivariate normal / Gaussian variables (currently only 2 source variables). The input format here is the full covariance matrix of the system, following by a vector `varsizes`, which lists the multivariate structure of each considered variable. I.e. if `size(Cfull) = [6 6]` and `varsizes = [1 3 2]`, this means variable `X1` is a univariate Gaussian in the first position in `Cfull`, `X2` is a trivaraite Gaussian and `S` is a bivariate Gaussian.
+The functions below implement the PID for multivariate normal / Gaussian variables (currently only 2 predictor variables). The input format here is the full covariance matrix of the system, following by a vector `varsizes`, which lists the multivariate structure of each considered variable. I.e. if `size(Cfull) = [6 6]` and `varsizes = [1 3 2]`, this means variable `X1` is a univariate Gaussian in the first position in `Cfull`, `X2` is a trivariate Gaussian and `S` is a bivariate Gaussian.
 
 - [`Immi_mvn.m`](Immi_mvn.m) : Redundancy measure based on minumum mutual information (equivalent to Imin for Gaussian sources).
 - [`Iccs_mvn.m`](Iccs_mvn.m) : Redundancy measure based on pointwise common change in surprisal.

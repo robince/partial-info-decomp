@@ -2,7 +2,12 @@
 
 This folder implements a redundancy measure based on pointwise common change of surprisal and a partial information decomposition based on this measure.
 
-For comparison the original `Imin` of [Williams and Beer (2010)](http://arxiv.org/abs/1004.2515) is also implemented.
+For details of the methods see:
+
+RAA Ince, **Measuring multivariate redundant information with pointwise common change in surprisal**  
+[arXiv:1602.05063](http://arxiv.org/abs/1602.05063) [cs.IT]
+
+For comparison purposes the original `Imin` of [Williams and Beer (2010)](http://arxiv.org/abs/1004.2515) is also implemented.
 
 ### Usage
 

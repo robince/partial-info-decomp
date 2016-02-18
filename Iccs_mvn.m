@@ -136,10 +136,10 @@ if NA==2
     pxys = mvnpdf(mcx, zeros(1,thsNv), Cfullind);
     
     px = mvnpdf(mcx(:,a1idx),zeros(1,AC(1).Nv),AC(1).Ca);
-    pxcs = mvnpdf(mcx(:,a1idx), AC(1).MacsF*mcx(:,thssidx), AC(1).Cacs);
+    pxcs = mvnpdf(mcx(:,a1idx), (AC(1).MacsF*mcx(:,thssidx)')', AC(1).Cacs);
     
     py = mvnpdf(mcx(:,a2idx),zeros(1,AC(2).Nv),AC(2).Ca);
-    pycs = mvnpdf(mcx(:,a2idx), AC(2).MacsF*mcx(:,thssidx), AC(2).Cacs);
+    pycs = mvnpdf(mcx(:,a2idx), (AC(2).MacsF*mcx(:,thssidx)')', AC(2).Cacs);
     
     a12idx = 1:AC(1).Nv + AC(2).Nv;
     pxy = mvnpdf(mcx(:,a12idx), zeros(1,ANv), Cind);

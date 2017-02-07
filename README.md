@@ -7,7 +7,7 @@ This folder implements some pointwise approaches to decomposing multivariate ent
 Implementation to accompany the manuscript:
 
 RAA Ince, **The Partial Entropy Decomposition: Decomposing multivariate entropy and mutual information via pointwise common surprisal**  
-[arXiv:XXX](http://arxiv.org/abs/XXX) [cs.IT]
+[arXiv:1702.01591](http://arxiv.org/abs/1702.01591) [cs.IT]
 
 Functions: `calc_pe`, `Hcs`, `pid_from_ped`, `monopid_from_ped`, `compare_ped`
 

@@ -9,7 +9,10 @@ Implementation to accompany the manuscript:
 RAA Ince, **The Partial Entropy Decomposition: Decomposing multivariate entropy and mutual information via pointwise common surprisal**  
 [arXiv:1702.01591](http://arxiv.org/abs/1702.01591) [cs.IT]
 
-Functions: `calc_pe`, `Hcs`, `pid_from_ped`, `monopid_from_ped`, `compare_ped`
+Functions: `calc_pe`, `Hcs`, `compare_ped`
+`pid_from_ped`, `monopid_from_ped`, `redpid_from_ped`
+
+Functions with a `mech_` prefix calculate the respective information decomposition from PED but separating source and mechansitic redundancy.
 
 Examples from paper: `examples_ped.m`
 
@@ -85,6 +88,7 @@ lat.labels % each node in the PED
 lat.PI % Partial Entropy Values
 pifull = pid_from_ped(lat); % full PID from PED
 pimono = monopid_from_ped(lat); % monosemous PID from PED
+pimonomech = mech_monopid_from_ped(lat); % monosemous PID from PED with separate mechanistic and source redundancy
 pibroja = pid_broja(Pxxy);
 ```
 

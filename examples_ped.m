@@ -80,7 +80,7 @@ Pxxy(1,2,1) = 0.25;
 Pxxy(2,1,1) = 0.25;
 Pxxy(2,2,2) = 0.25;
 fprintf(1,'AND PID\n')
-compare_ped(Pxxy);
+lat = compare_ped(Pxxy);
 
 %% AND PID - SWITCH OUTPUT
 Pxxy = zeros(2,2,2);
@@ -88,7 +88,7 @@ Pxxy(1,1,1) = 0.25;
 Pxxy(1,2,1) = 0.25;
 Pxxy(2,1,1) = 0.25;
 Pxxy(2,2,2) = 0.25;
-fprintf(1,'AND PID\n')
+fprintf(1,'AND PID SWITCH OUTPUT\n')
 compare_ped(permute(Pxxy,[1 3 2]));
 
 %% SUM PID 

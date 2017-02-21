@@ -1,4 +1,4 @@
-function compare_ped(P)
+function lat = compare_ped(P)
 % utility function to compare different information decompositions
 
 lat = lattice2d();
@@ -24,13 +24,20 @@ fprintf(1,'PI with Iccs    : [ %s ]\n',arr);
 lat = lattice3d();
 lat = calc_pe(lat,P,@Hcs);
 
-pid = pid_from_ped(lat);
+% pid = pid_from_ped(lat);
+pid = mech_pid_from_ped(lat);
 arr = sprintf('%6.4f ',pid);
 fprintf(1,'PI from PED     : [ %s ]\n',arr);
 
-pid = monopid_from_ped(lat);
+% pid = monopid_from_ped(lat);
+pid = mech_monopid_from_ped(lat);
 arr = sprintf('%6.4f ',pid);
 fprintf(1,'Mono-PI from PED: [ %s ]\n',arr);
+
+% pid = redpid_from_ped(lat);
+pid = mech_redpid_from_ped(lat);
+arr = sprintf('%6.4f ',pid);
+fprintf(1,'RedH-PI from PED: [ %s ]\n',arr);
 
 % isclosefp = @(a,b) abs(a - b) <= 1e-15;
 % assert(isclosefp(sum(lat.PI),lat.Icap(end)));

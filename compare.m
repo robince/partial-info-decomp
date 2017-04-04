@@ -19,7 +19,15 @@ end
 lat = calc_pi(lat, P, @Iccs);
 PIccs = lat.PI;
 arr = sprintf('%6.4f ',PIccs);
-fprintf(1,'PI with Iccs: [ %s ]\n',arr);
+fprintf(1,'PI with Iccs_Pind: [ %s ]\n',arr);
+if lat.Nx==3
+    display_nonzero_terms(lat)
+end
+
+lat = calc_pi(lat, P, @Iccs_pme);
+PIccs_pme = lat.PI;
+arr = sprintf('%6.4f ',PIccs_pme);
+fprintf(1,'PI with Iccs_pme: [ %s ]\n',arr);
 if lat.Nx==3
     display_nonzero_terms(lat)
 end

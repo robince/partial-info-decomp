@@ -1,6 +1,15 @@
-function lat = calc_pi(lat,Pjoint,Icap)
+function lat = calc_pi(lat,Pjoint,Icap,forcenz,normlevels)
 % Calculate PI on a redundancy lattice using Williams and Beer summation
-% Normalise non-disjoint values across levels for children of a node
+% inputs:
+% lat - lattice structure
+% Pjoint - full probability distribuion (axis per variable, target last
+% axis)
+% forcenz - threshold negative values on the lattice (default false)
+% normlevels - normalize values across levels of the lattice (default
+% false)
+%
+% if only lat provided calculate PI using existing Icap
+% otherwise, recalculate Icap
 
 % if only lat provided calculate PI using existing Icap
 % otherwise, recalculate Icap
@@ -20,6 +29,13 @@ if lat.Nx>3
     error('calc_pi: too many variables')
 end
 
+if nargin<4
+    forcenz = false;
+end
+if nargin<5
+    normlevels = false;
+end
+
 % use equation (7) from Williams and Beer to calculate
 % PI at each node
 lat.PI = NaN(size(lat.Icap));
@@ -31,29 +47,36 @@ Nlevels = max(lat.level);
 for li=1:(Nlevels-1)
     nodes = find(lat.level==li);
     for ni=nodes
-        lat = calc_pi_node(lat,ni);
+        lat = calc_pi_node(lat,ni,forcenz,normlevels);
     end
 end
 % don't enforce non-negativitity for top node
-lat = calc_pi_node(lat,lat.top,false);
+lat = calc_pi_node(lat,lat.top,false,normlevels);
 
 
-function lat = calc_pi_node(lat,ni,nonneg)
+function lat = calc_pi_node(lat,ni,nonneg,normlevels)
 if nargin<3
     nonneg = true;
 end
 children = lat.children{ni};
 if isempty(children)
     % no children
-    lat.PI(ni) = lat.Icap(ni);
-    lat.PIraw(ni) = lat.Icap(ni);
+    thsPI = lat.Icap(ni);
+    if nonneg
+        thsPI = max(thsPI,0);
+    end
+    lat.PI(ni) = thsPI;
+    lat.PIraw(ni) = thsPI;
     return
 end
 all_children = recurse_children(lat,ni,[]);
 
-normPIchildren = normalise_levels(lat, all_children);
-% normPIchildren = lat.PI(all_children);
-thsPI = lat.Icap(ni) - sum(normPIchildren);
+if normlevels
+    PIchildren = normalise_levels(lat, all_children);
+else
+    PIchildren = lat.PI(all_children);
+end
+thsPI = lat.Icap(ni) - sum(PIchildren);
 if nonneg
     thsPI = max(thsPI,0);
 end
@@ -62,7 +85,7 @@ lat.PI(ni) = thsPI;
 lat.PIraw(ni) = thsPI;
 
 if ni==lat.top
-    lat.PI(all_children) = normPIchildren;
+    lat.PI(all_children) = PIchildren;
 end
 
 

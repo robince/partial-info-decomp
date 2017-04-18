@@ -9,9 +9,10 @@ function lat = calc_pi_mvn(lat,Cfull,varsizes,Icap,forcenz,normlevels)
 % forcenz - threshold negative values on the lattice (default false)
 % normlevels - normalize values across levels of the lattice (default
 % false)
-
+%
 % if only lat provided calculate PI using existing Icap
 % otherwise, recalculate Icap
+
 if nargin>1
     if sum(varsizes) ~= size(Cfull,1)
         error('wrong number of variables specified')
@@ -86,7 +87,7 @@ lat.PI(ni) = thsPI;
 lat.PIraw(ni) = thsPI;
 
 if ni==lat.top
-    lat.PI(all_children) = normPIchildren;
+    lat.PI(all_children) = PIchildren;
 end
 
 

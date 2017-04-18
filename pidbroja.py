@@ -3,6 +3,7 @@ import numpy as np
 import scipy as sp
 import dit
 import scipy.io
+from dit.algorithms.scipy_optimizers import pid_broja
 
 dat = sp.io.loadmat('pyP.mat')
 P = np.squeeze(dat['P'])
@@ -13,13 +14,13 @@ if Nvar != 3:
 
 d = dit.Distribution(*zip(*np.ndenumerate(P)))
 
-ui, rdn, syn, mi_orig, mi_opt = dit.algorithms.pid_broja.unique_informations(d,[[0], [1]], [2], rv_mode='indices', tol=1e-4, verbose=True)
+x = pid_broja(d, [[0],[1]], [2])
 
 pid = np.zeros(4)
-pid[0] = rdn
-pid[1] = ui[0]
-pid[2] = ui[1]
-pid[3] = syn
+pid[0] = x.R
+pid[1] = x.U0
+pid[2] = x.U1
+pid[3] = x.S
 
 dat['pid'] = pid
 sp.io.savemat('pyP.mat',dat)

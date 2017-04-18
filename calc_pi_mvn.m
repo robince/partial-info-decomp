@@ -1,4 +1,4 @@
-function lat = calc_pi_mvn(lat,Cfull,varsizes,Icap,forcenz,normlevels)
+function lat = calc_pi_mvn(lat,Cfull,varsizes,Icap,forcenn,normlevels)
 % Calculate PI on a redundancy lattice using Williams and Beer summation
 % inputs:
 % lat - lattice structure
@@ -32,7 +32,7 @@ if lat.Nx>3
 end
 
 if nargin<5
-    forcenz = false;
+    forcenn = false;
 end
 if nargin<6
     normlevels = false;
@@ -49,7 +49,7 @@ Nlevels = max(lat.level);
 for li=1:(Nlevels-1)
     nodes = find(lat.level==li);
     for ni=nodes
-        lat = calc_pi_node(lat,ni,forcenz,normlevels);
+        lat = calc_pi_node(lat,ni,forcenn,normlevels);
     end
 end
 % don't enforce non-negativitity for top node

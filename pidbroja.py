@@ -1,11 +1,14 @@
 #!env python
+import sys
 import numpy as np
 import scipy as sp
 import dit
 import scipy.io
 from dit.algorithms.scipy_optimizers import pid_broja
 
-dat = sp.io.loadmat('pyP.mat')
+
+fname = sys.argv[1]
+dat = sp.io.loadmat(fname)
 P = np.squeeze(dat['P'])
 s = P.shape
 Nvar = len(P.shape)
@@ -23,4 +26,4 @@ pid[2] = x.U1
 pid[3] = x.S
 
 dat['pid'] = pid
-sp.io.savemat('pyP.mat',dat)
+sp.io.savemat(fname,dat)

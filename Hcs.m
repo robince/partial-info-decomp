@@ -156,8 +156,7 @@ if NA==3
     s = size(Paaa);
     Paaa = reshape(Paaa, [s(1:2) prod(s(3:end))]);
     Ptrip(1).Paaa = Paaa;
-    [P1 P2] = marg_maxent2(Paaa);
-    Ptrip(1).Paaa1 = P1;
+    P2 = marg_maxent2(Paaa);
     Ptrip(1).Paaa2 = P2;
     % overwrite pairwise and single distributions to be consistent with the
     % maxent
@@ -241,8 +240,6 @@ elseif NA==3
     end
     cs = Ptrip(1).Paaa2 .* cs;
 end
-% keyboard
-% cs
 locred = nansum(cs(:));
 Hcs = locred;
 

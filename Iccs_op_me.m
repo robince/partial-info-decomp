@@ -101,7 +101,7 @@ if NA==2
     s = size(Paas);
     Paas = reshape(Paas, [s(1) prod(s(2:end-1)) s(end)]);
     % pairwise maxent
-    [P1,P2] = marg_maxent2(Paas);
+    P2 = marg_maxent2(Paas);
     Ppair(1).Paas = P2;
     Ppair(1).Paa = squeeze(sum(P2,3));
 end

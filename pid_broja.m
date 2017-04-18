@@ -6,7 +6,16 @@ if Nvar ~= 3
     error('only 3 variables supported')
 end
 
-save pyP P
-!python pidbroja.py
-dat = load('pyP.mat');
+fname = tempname;
+save(fname,'P')
+cmd = sprintf('python pidbroja.py %s',fname);
+status = system(cmd);
+
+if status~=0
+    error('python returned an error code: %d',status)
+end
+
+dat = load(fname);
 pid = dat.pid;
+
+delete([fname '.mat'])

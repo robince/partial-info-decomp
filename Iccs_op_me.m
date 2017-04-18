@@ -1,6 +1,7 @@
-function Iccs = Iccs_pme(A, Pjoint)
+function Iccs = Iccs_op_me(A, Pjoint)
 % calculate redundancy as from pointwise common change in surprise
-% use pairwise maximum entropy distribution
+% use maximum entropy subejct to pairwise predictor-target marginal
+% and all predictor marginal constraints
 % A - cell array of elements
 % Pjoint - full joint distribution
 
@@ -162,10 +163,9 @@ if NA==3
     % collapse A3
     s = size(Paaas);
     Paaas = reshape(Paaas, [s(1:2) prod(s(3:end-1)) s(end)]);
-    [P1, P2] = marg_maxent2(Paaas);
-    Paaas = P2;
-%     [P1, P2, P3] = marg_maxent3(Paaas);
-%     Paaas = P3;
+    
+    Pme = marg_maxent_3pred(Paaas);
+    Paaas = Pme;
     Ptrip(1).Paaas = Paaas;
     Ptrip(1).Paaa = squeeze(sum(Paaas,4));
     
@@ -198,7 +198,6 @@ if NA==1
             cds(a1,si) = ds1;
         end
     end
-%     keyboard
     cds = Pele(1).Pas .* cds;
 elseif NA==2
     for a1=1:Am(1)
@@ -211,11 +210,6 @@ elseif NA==2
                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
                 ii12 = log2(num ./ den);
-                
-%                 if Ps(si)>0
-%                     fprintf(1,'[%d %d %d] : dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f  ii: %6.3f\n',a1,a2,si,dsj,ds1,ds2,ii12);
-% %                     keyboard
-%                 end
 
                 if sign(ds1)==sign(ds2)
                     % change of surprise has same size so possibility of
@@ -238,7 +232,6 @@ elseif NA==2
             end
         end
     end
-%     keyboard
     cds = Ppair(1).Paas .* cds;
 elseif NA==3
     for a1=1:Am(1)
@@ -269,7 +262,8 @@ elseif NA==3
                             cds(a1,a2,a3,si) = overlap;
                         end
                     end
-%                     tmp(a1,a2,a3,si) = ds1 + ds2 + ds3 - ds12 - ds13 - ds23 + ds123;
+%                     tmp(a1,a2,a3,si) = ds123;
+
                 end
             end
         end

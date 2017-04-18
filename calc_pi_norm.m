@@ -52,6 +52,7 @@ end
 all_children = recurse_children(lat,ni,[]);
 
 normPIchildren = normalise_levels(lat, all_children);
+% normPIchildren = lat.PI(all_children);
 thsPI = lat.Icap(ni) - sum(normPIchildren);
 if nonneg
     thsPI = max(thsPI,0);

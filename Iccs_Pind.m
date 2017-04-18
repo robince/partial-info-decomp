@@ -1,7 +1,7 @@
-function Iccs = Iccs(A, Pjoint)
+function Iccs = Iccs_Pind(A, Pjoint)
 % calculate redundancy between a set of sources
 % from pointwise common change in surprise
-% using conditional independent joint-source distributions
+% using conditional independent joint-source distribution
 %
 % A - cell array of sources
 % Pjoint - full joint distribution (S last axis)
@@ -54,7 +54,7 @@ for ai=1:NA
 end
 
 % build pairwise joint source distributions
-if NA>1
+if NA==2
     pairs = nchoosek(1:NA,2);
     Npair = size(pairs,1);
     Ppair(Npair).Paa = []; % intialize struct
@@ -83,6 +83,23 @@ if NA==3
     Paaas = bsxfun(@times, Paaacs, reshape(Ps,[1 1 1 Sm]));
     Ptrip(1).Paaas = Paaas;
     Ptrip(1).Paaa = nansum(Paaas,4);
+    
+    % now build pairwise distributions from this maxent solution
+    pairs = nchoosek(1:3,2);
+    Npair = size(pairs,1);
+    Ppair(Npair).Paa = []; % intialize struct
+    for pi=1:Npair
+        keepax = [pairs(pi,1) pairs(pi,2)];
+        % collapse variables we don't need
+        sumover = setdiff(1:3, keepax);
+        Paas = Paaas;
+        for ii=1:length(sumover)
+            Paas = sum(Paas, sumover(ii));
+        end
+        Paas = squeeze(Paas);
+        Ppair(pi).Paas = Paas;
+        Ppair(pi).Paa = squeeze(sum(Paas,3));
+    end
 end
 
 
@@ -104,30 +121,26 @@ elseif NA==2
                 dsj = log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) );
                 ds1 = log2( PA(1).Pas(a1,si) ./ (PA(1).Pa(a1)*Ps(si)) );
                 ds2 = log2( PA(2).Pas(a2,si) ./ (PA(2).Pa(a2)*Ps(si)) );
-                
-%                 num = PA(1).Pa(a1) * PA(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
-%                 den = PA(1).Pas(a1,si) * PA(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
-%                 ii12 = log2(num ./ den);
-                
-%                 if Ps(si)>0
-%                     fprintf(1,'[%d %d %d] : dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f  ii: %6.3f\n',a1,a2,si,dsj,ds1,ds2,ii12);
-% %                     keyboard
-%                 end
-%                 cds(a1,a2,si) = max(-ii12,0);
 
+                overlap = ds1 + ds2 - dsj;
+                if isfinite(overlap) && (abs(overlap)-min(abs([ds1 ds2])))>2*eps(abs(overlap))
+                    fprintf(1,'Warning [%d %d %d] : Overlap larger than individuals. overlap: %6.3f ds1: %6.3f  ds2: %6.3f\n',a1,a2,si,overlap,ds1,ds2)
+                    fprintf(1,'overlap: %d ds1: %d  ds2: %d\n',sign(overlap),sign(ds1),sign(ds2))
+                    
+                end
                 if sign(ds1)==sign(ds2)
                     % change of surprise has same size so possibility of
-                    % overlap 
+                    % overlap
                     if sign(dsj)~=sign(ds1)
 %                         fprintf(1,'Warning [%d %d %d] : DSJ sign flip  dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f\n',a1,a2,si,dsj,ds1,ds2)
 %                         keyboard
                         continue
                     end
                     overlap = ds1 + ds2 - dsj;
-
+                    
                     if sign(overlap)==sign(ds1)
                         % redundant (mis)information
-                        if isfinite(overlap) && (abs(overlap)-max(abs([ds1 ds2])))>2*eps(abs(overlap))
+                        if isfinite(overlap) && (abs(overlap)-min(abs([ds1 ds2])))>2*eps(abs(overlap))
                             fprintf(1,'Warning [%d %d %d] : Overlap larger than individuals. overlap: %6.3f ds1: %6.3f  ds2: %6.3f\n',a1,a2,si,overlap,ds1,ds2)
                         end
                         cds(a1,a2,si) = overlap;
@@ -136,7 +149,6 @@ elseif NA==2
             end
         end
     end
-%     keyboard
     cds = Ppair(1).Paas .* cds;
 elseif NA==3
     for a1=1:Am(1)
@@ -172,12 +184,8 @@ elseif NA==3
         end
     end
     cds = Ptrip(1).Paaas .* cds;
-%     keyboard
 end
-% keyboard
-% cds
-% cds
-% Paa = Ppair.Paa
+
 locred = nansum(cds(:));
 Iccs = locred;
 

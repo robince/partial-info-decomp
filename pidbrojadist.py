@@ -4,8 +4,13 @@ import numpy as np
 import scipy as sp
 import dit
 import scipy.io
-from dit.algorithms.scipy_optimizers import pid_broja_dist
+from dit.algorithms.scipy_optimizers import BROJAOptimizer
 
+def pid_broja_dist(dist, sources, target, rv_mode=None):
+    broja = BROJAOptimizer(dist, sources, target, rv_mode)
+    broja.optimize()
+    opt_dist = broja.construct_dist()
+    return opt_dist
 
 fname = sys.argv[1]
 dat = sp.io.loadmat(fname)

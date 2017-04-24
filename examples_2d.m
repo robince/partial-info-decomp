@@ -7,7 +7,7 @@ Pxxy(1,2,2) = 1/3;
 Pxxy(2,1,3) = 1/3;
 
 fprintf(1,'Williams and Beer Fig 4A\n')
-lat = compare(lattice2d(),Pxxy);
+compare(lattice2d(),Pxxy);
 
 %% W&B FIGURE 4B
 Pxxy = zeros(2,2,3);
@@ -108,7 +108,7 @@ Pxxy(1,2,2) = 0.25;
 Pxxy(2,1,2) = 0.25;
 Pxxy(2,2,1) = 0.25;
 fprintf(1,'XOR\n')
-compare(lattice2d(),Pxxy);
+latpi = compare(lattice2d(),Pxxy);
 
 %% AND
 Pxxy = zeros(2,2,2);
@@ -117,8 +117,12 @@ Pxxy(1,2,1) = 0.25;
 Pxxy(2,1,1) = 0.25;
 Pxxy(2,2,2) = 0.25;
 fprintf(1,'AND\n')
-lat = compare(lattice2d(),Pxxy);
+latpi = compare(lattice2d(),Pxxy);
 
+%%
+Pxyx = permute(Pxxy,[1 3 2]);
+fprintf(1,'ANDPERM\n')
+latpi = compare(lattice2d(),Pxyx);
 %% SUM
 Pxxy = zeros(2,2,3);
 Pxxy(1,1,1) = 0.25;
@@ -126,7 +130,7 @@ Pxxy(1,2,2) = 0.25;
 Pxxy(2,1,2) = 0.25;
 Pxxy(2,2,3) = 0.25;
 fprintf(1,'SUM\n')
-lat = compare(lattice2d(),Pxxy);
+latpi = compare(lattice2d(),Pxxy);
 
 %% RNDXOR : Griffith et al. (2014) Fig. 2
 % Griffith et al. (2012) Fig. 8 
@@ -142,7 +146,7 @@ Pxxy(4,3,4) = p;
 Pxxy(4,4,3) = p;
 
 fprintf(1,'RNDXOR Griffith (2014) Fig 2\n');
-lat = compare(lattice2d(),Pxxy);
+latpi = compare(lattice2d(),Pxxy);
 
 %% IMPERFECTRDN : Griffith et al. (2014) Fig. 3
 Pxxy = zeros(2,2,2);
@@ -154,7 +158,7 @@ Pxxy(2,2,2) = 0.5;
 % Pxxy(2,2,2) = 0.5;
 
 fprintf(1,'IMPERFECTRDN Griffith (2014) Fig 3\n');
-lat = compare(lattice2d(),Pxxy);
+latpi = compare(lattice2d(),Pxxy);
 % NB: shows higher {1}{2} than Imin! This is because {2} has unique
 % misinformation
 
@@ -176,6 +180,7 @@ fprintf(1,'RDN Griffith & Koch (2014) Fig. 6.3\n');
 compare(lattice2d(),Pxxy);
 
 %% XORAND : Bertschinger 2014 Table 1
+% equal to binary summation
 Pxxy = zeros(2,2,3);
 Pxxy(1,1,1) = 0.25;
 Pxxy(1,2,3) = 0.25;
@@ -209,8 +214,6 @@ Pxxy(3,4,8) = p;
 Pxxy(4,3,8) = p;
 Pxxy(4,4,7) = p;
 
-
-
 Pxxy(5,5,9) = p;
 Pxxy(5,6,10) = p;
 Pxxy(6,5,10) = p;
@@ -233,3 +236,11 @@ Pxxy(8,8,15) = p;
 
 fprintf(1,'RDNUNQXOR Griffith & Koch (2014) Fig. 6.12\n');
 compare(lattice2d(),Pxxy);
+
+%% REDUCED OR
+Pxxy = zeros(2,2,2);
+Pxxy(1,1,1) = 0.5;
+Pxxy(1,2,2) = 0.25;
+Pxxy(2,1,2) = 0.25;fprintf(1,'Reduced OR (Lizier)\n');
+lat = compare(lattice2d(),Pxxy);
+

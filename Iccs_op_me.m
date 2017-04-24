@@ -107,7 +107,6 @@ if NA==2
 end
 
 % build triplewise joint element distributions
-Paaas = cell(1,NA);
 if NA==3
     thsA = [A{1} A{2} A{3}];
     Nv = length(thsA);
@@ -210,7 +209,9 @@ elseif NA==2
                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
                 ii12 = log2(num ./ den);
-
+                
+                overlap = ds1 + ds2 - dsj;
+                
                 if sign(ds1)==sign(ds2)
                     % change of surprise has same size so possibility of
                     % overlap 
@@ -219,8 +220,7 @@ elseif NA==2
 %                         keyboard
                         continue
                     end
-                    overlap = ds1 + ds2 - dsj;
-
+                    
                     if sign(overlap)==sign(ds1)
                         % redundant (mis)information
                         if isfinite(overlap) && abs(overlap) > max(abs([ds1 ds2]))

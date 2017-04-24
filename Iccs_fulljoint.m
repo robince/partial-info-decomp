@@ -49,7 +49,7 @@ for ai=1:NA
 end
 
 % build pairwise joint element distributions
-if NA>1
+if NA==2
     pairs = nchoosek(1:NA,2);
     Npair = size(pairs,1);
     Ppair(Npair).Paa = []; % intialize struct
@@ -166,6 +166,23 @@ if NA==3
     Paaas = reshape(Paaas, [s(1:2) prod(s(3:end-1)) s(end)]);
     Ptrip(1).Paaas = Paaas;
     Ptrip(1).Paaa = squeeze(sum(Paaas,4));
+    
+    % now build pairwise distributions from this joint
+    pairs = nchoosek(1:3,2);
+    Npair = size(pairs,1);
+    Ppair(Npair).Paa = []; % intialize struct
+    for pi=1:Npair
+        keepax = [pairs(pi,1) pairs(pi,2)];
+        % collapse variables we don't need
+        sumover = setdiff(1:3, keepax);
+        Paas = Paaas;
+        for ii=1:length(sumover)
+            Paas = sum(Paas, sumover(ii));
+        end
+        Paas = squeeze(Paas);
+        Ppair(pi).Paas = Paas;
+        Ppair(pi).Paa = squeeze(sum(Paas,3));
+    end
 end
 
 
@@ -199,6 +216,7 @@ elseif NA==2
 %                 end
 
                 overlap = ds1 + ds2 - dsj;
+                tmp(a1,a2,si) = overlap;
                 if sign(ds1)==sign(ds2)
                     % change of surprise has same size so possibility of
                     % overlap 
@@ -221,6 +239,7 @@ elseif NA==2
         end
     end
 %     keyboard
+    tmp = Ppair(1).Paas .* tmp;
     cds = Ppair(1).Paas .* cds;
 elseif NA==3
     for a1=1:Am(1)
@@ -262,6 +281,8 @@ elseif NA==3
 end
 % keyboard
 % cds
+% tmp
+% nansum(tmp(:))
 locred = nansum(cds(:));
 Iccs = locred;
 

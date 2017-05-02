@@ -42,10 +42,10 @@ end
 %     display_nonzero_terms(lat)
 % end
 
-lat = calc_pi(lat, P, @Iccs_op_me);
+lat = calc_pi(lat, P, @Iccs);
 PIccs_pme = lat.PI;
 arr = sprintf('%6.4f ',PIccs_pme);
-fprintf(1,'PI with Iccs_op_me: [ %s ]\n',arr);
+fprintf(1,'PI with Iccs: [ %s ]\n',arr);
 if lat.Nx==3
     display_nonzero_terms(lat)
 end

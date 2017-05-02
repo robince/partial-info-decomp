@@ -6,7 +6,8 @@ Pxxy(1,1,1) = 0.5;
 Pxxy(2,2,2) = 0.5;
 
 fprintf(1,'RDN\n')
-compare(lattice2d(),Pxxy)
+compare(lattice2d(),Pxxy);
+
 %% W&B FIGURE 4A
 Pxxy = zeros(2,2,3);
 Pxxy(1,1,1) = 1/3;

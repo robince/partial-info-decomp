@@ -1,6 +1,7 @@
-function Iccs = Iccs_fulljoint(A, Pjoint)
+function Iccs = Iccs_op_me(A, Pjoint)
 % calculate redundancy as from pointwise common change in surprise
-% use the full/true joint distribution for co-information terms
+% use maximum entropy subejct to pairwise predictor-target marginal
+% and all predictor marginal constraints
 % A - cell array of elements
 % Pjoint - full joint distribution
 
@@ -25,7 +26,8 @@ end
 % sort elements 
 A = cellfun(@sort, A, 'Unif',false);
 
-% build distributions for each element
+% build distributions for single atom
+% Pas = 2d, no maxent solution needed
 for ai=1:NA
     thsA = A{ai};
     Nv = length(thsA);
@@ -48,67 +50,63 @@ for ai=1:NA
     Am(ai) = size(Pas,1);
 end
 
-% build pairwise joint element distributions
+% build pairwise maxent joint distribution for 2 atoms
 if NA==2
-    pairs = nchoosek(1:NA,2);
-    Npair = size(pairs,1);
-    Ppair(Npair).Paa = []; % intialize struct
-    for pi=1:Npair
-        thsA = [A{pairs(pi,1)} A{pairs(pi,2)}];
-        Nv = length(thsA);
-        Nv1 = length(A{pairs(pi,1)});
-        Nv2 = length(A{pairs(pi,2)});
-
-        % collapse variables we don't need
-        sumover = setdiff(vars, thsA);
-        Paas = Pjoint;
-        for ii=1:length(sumover)
-            Paas = sum(Paas, sumover(ii));
-        end
-        Paas = squeeze(Paas);
-
-        % reorder axes to match order of unique variables in this pair of
-        % elements
-        % order we want
-        Aunq = unique(thsA,'stable');
-        % order we have
-        [Aunqsrt, Aunqsrtidx] = sort(Aunq);
-        % invert order
-        [~, Aidx] = sort(Aunqsrtidx);
-        Paas = permute(Paas, [Aidx length(Aunq)+1]);
-        thsA = changem(thsA, 1:length(Aunq), Aunq);
-        Aunq = unique(thsA, 'stable');
-
-        % copy duplicate variables as required
-        uniquevar_i = 1;
-        for allvar_i=1:Nv
-            if (uniquevar_i>length(Aunq)) || (thsA(allvar_i) ~= Aunq(uniquevar_i))
-                % need to insert a duplicate variable
-                var_needed = thsA(allvar_i);
-                copy_from = find(thsA==var_needed,1);
-                Paas = copy_var(Paas, copy_from, allvar_i);
-            else
-                % axis order is correct
-                uniquevar_i = uniquevar_i + 1;
-            end
-        end
-
-        % joint distribution over all variables
-        % in both pairs of elements
-        % now should have correct variable axis in correct order
-        % collapse A1
-        s = size(Paas);
-        Paas = reshape(Paas, [prod(s(1:Nv1)) s(Nv1+1:end)]);
-        % collapse A2
-        s = size(Paas);
-        Paas = reshape(Paas, [s(1) prod(s(2:end-1)) s(end)]);
-        Ppair(pi).Paas = Paas;
-        Ppair(pi).Paa = squeeze(sum(Paas,3));
+    thsA = [A{1} A{2}];
+    Nv = length(thsA);
+    Nv1 = length(A{1});
+    Nv2 = length(A{2});
+    
+    % collapse variables we don't need
+    sumover = setdiff(vars, thsA);
+    Paas = Pjoint;
+    for ii=1:length(sumover)
+        Paas = sum(Paas, sumover(ii));
     end
+    Paas = squeeze(Paas);
+    
+    % reorder axes to match order of unique variables in this pair of
+    % elements
+    % order we want
+    Aunq = unique(thsA,'stable');
+    % order we have
+    [Aunqsrt, Aunqsrtidx] = sort(Aunq);
+    % invert order
+    [~, Aidx] = sort(Aunqsrtidx);
+    Paas = permute(Paas, [Aidx length(Aunq)+1]);
+    thsA = changem(thsA, 1:length(Aunq), Aunq);
+    Aunq = unique(thsA, 'stable');
+    
+    % copy duplicate variables as required
+    uniquevar_i = 1;
+    for allvar_i=1:Nv
+        if (uniquevar_i>length(Aunq)) || (thsA(allvar_i) ~= Aunq(uniquevar_i))
+            % need to insert a duplicate variable
+            var_needed = thsA(allvar_i);
+            copy_from = find(thsA==var_needed,1);
+            Paas = copy_var(Paas, copy_from, allvar_i);
+        else
+            % axis order is correct
+            uniquevar_i = uniquevar_i + 1;
+        end
+    end
+    
+    % joint distribution over all variables
+    % in both pairs of elements
+    % now should have correct variable axis in correct order
+    % collapse A1
+    s = size(Paas);
+    Paas = reshape(Paas, [prod(s(1:Nv1)) s(Nv1+1:end)]);
+    % collapse A2
+    s = size(Paas);
+    Paas = reshape(Paas, [s(1) prod(s(2:end-1)) s(end)]);
+    % pairwise maxent
+    P2 = marg_maxent2(Paas);
+    Ppair(1).Paas = P2;
+    Ppair(1).Paa = squeeze(sum(P2,3));
 end
 
 % build triplewise joint element distributions
-Paaas = cell(1,NA);
 if NA==3
     thsA = [A{1} A{2} A{3}];
     Nv = length(thsA);
@@ -164,10 +162,13 @@ if NA==3
     % collapse A3
     s = size(Paaas);
     Paaas = reshape(Paaas, [s(1:2) prod(s(3:end-1)) s(end)]);
+    
+    Pme = marg_maxent_3pred(Paaas);
+    Paaas = Pme;
     Ptrip(1).Paaas = Paaas;
     Ptrip(1).Paaa = squeeze(sum(Paaas,4));
     
-    % now build pairwise distributions from this joint
+    % now build pairwise distributions from this maxent solution
     pairs = nchoosek(1:3,2);
     Npair = size(pairs,1);
     Ppair(Npair).Paa = []; % intialize struct
@@ -196,7 +197,6 @@ if NA==1
             cds(a1,si) = ds1;
         end
     end
-%     keyboard
     cds = Pele(1).Pas .* cds;
 elseif NA==2
     for a1=1:Am(1)
@@ -209,14 +209,9 @@ elseif NA==2
                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
                 ii12 = log2(num ./ den);
-
-%                 if Ppair.Paas(a1,a2,si)>0
-%                     fprintf(1,'[%d %d %d] : dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f  ii: %6.3f\n',a1,a2,si,dsj,ds1,ds2,-ii12);
-% %                     keyboard
-%                 end
-
+                
                 overlap = ds1 + ds2 - dsj;
-                tmp(a1,a2,si) = overlap;
+                
                 if sign(ds1)==sign(ds2)
                     % change of surprise has same size so possibility of
                     % overlap 
@@ -225,8 +220,7 @@ elseif NA==2
 %                         keyboard
                         continue
                     end
-
-
+                    
                     if sign(overlap)==sign(ds1)
                         % redundant (mis)information
                         if isfinite(overlap) && abs(overlap) > max(abs([ds1 ds2]))
@@ -234,12 +228,10 @@ elseif NA==2
                         end
                         cds(a1,a2,si) = overlap;
                     end
-                end
+                end   
             end
         end
     end
-%     keyboard
-    tmp = Ppair(1).Paas .* tmp;
     cds = Ppair(1).Paas .* cds;
 elseif NA==3
     for a1=1:Am(1)
@@ -250,9 +242,9 @@ elseif NA==3
                     ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
                     ds2 = log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) );
                     ds3 = log2( Pele(3).Pas(a3,si) ./ (Pele(3).Pa(a3)*Ps(si)) );
-                    ds12 = log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) );
-                    ds13 = log2( Ppair(2).Paas(a1,a3,si) / (Ppair(2).Paa(a1,a3)*Ps(si)) );
-                    ds23 = log2( Ppair(3).Paas(a2,a3,si) / (Ppair(3).Paa(a2,a3)*Ps(si)) );
+                    ds12 = (log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) ));
+                    ds13 = (log2( Ppair(2).Paas(a1,a3,si) / (Ppair(2).Paa(a1,a3)*Ps(si)) ));
+                    ds23 = (log2( Ppair(3).Paas(a2,a3,si) / (Ppair(3).Paa(a2,a3)*Ps(si)) ));
                     
                     if (sign(ds1)==sign(ds2)) && (sign(ds2)==sign(ds3))
                         % change of surprise has same sign for all 3
@@ -270,19 +262,14 @@ elseif NA==3
                             cds(a1,a2,a3,si) = overlap;
                         end
                     end
-                    tmp(a1,a2,a3,si) = ds123;
+%                     tmp(a1,a2,a3,si) = ds123;
 
                 end
             end
         end
     end
     cds = Ptrip(1).Paaas .* cds;
-%     keyboard
 end
-% keyboard
-% cds
-% tmp
-% nansum(tmp(:))
 locred = nansum(cds(:));
 Iccs = locred;
 

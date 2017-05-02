@@ -82,7 +82,8 @@ Pxxxy(2,2,1,7) = 0.25;
 fprintf(1,'Bertschinger / Rauh XOR copied input\n')
 lat = compare(lattice3d(),Pxxxy);
 
-%% 3 way XOR
+%% 3 way EVEN PARITY
+
 Pxxxy = zeros(2,2,2,2);
 Pxxxy(1,1,1,1) = 1/8;
 Pxxxy(1,1,2,2) = 1/8;
@@ -91,10 +92,11 @@ Pxxxy(1,2,2,1) = 1/8;
 Pxxxy(2,1,1,2) = 1/8;
 Pxxxy(2,1,2,1) = 1/8;
 Pxxxy(2,2,1,1) = 1/8;
-Pxxxy(2,2,2,1) = 1/8;
+Pxxxy(2,2,2,2) = 1/8;
 
-fprintf(1,'3-way XOR\n')
+fprintf(1,'3-way EVEN PARITY\n')
 lat = compare(lattice3d(),Pxxxy);
+
 
 %% 3 way AND
 Pxxxy = zeros(2,2,2,2);

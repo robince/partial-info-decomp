@@ -210,10 +210,10 @@ elseif NA==2
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
                 ii12 = log2(num ./ den);
 
-%                 if Ppair.Paas(a1,a2,si)>0
-%                     fprintf(1,'[%d %d %d] : dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f  ii: %6.3f\n',a1,a2,si,dsj,ds1,ds2,-ii12);
-% %                     keyboard
-%                 end
+                if Ppair.Paas(a1,a2,si)>0
+                    fprintf(1,'[%d %d %d] : dsj:  %6.3f  ds1:  %6.3f  ds2:  %6.3f  ii: %6.3f\n',a1,a2,si,dsj,ds1,ds2,-ii12);
+%                     keyboard
+                end
 
                 overlap = ds1 + ds2 - dsj;
                 tmp(a1,a2,si) = overlap;

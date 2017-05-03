@@ -30,6 +30,9 @@ Functions: `calc_pi`, `Iccs`, `Iccs_Pind`, `Iccs_fulljoint`,  `compare`, `calc_p
 
 Examples from paper: `examples_2d.m`, `examples_3d.m`, `examples_2dmvn.m`, `discrete_pred_pred.m`
 
+Please note v2 of the arXiv paper made some changes to the method which are now reflected in the code. 
+Different marginal constraints are used for the maximum entropy solution, and zero thresholding and normalisation are no longer applied to the lattice.
+Thresholding and normalisation are still available as options to the `calc_pi` function, but do not occur by default.
 
 ### Other measures
 

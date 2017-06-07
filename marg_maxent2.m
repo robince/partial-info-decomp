@@ -4,7 +4,11 @@ Nvar = length(s);
 
 fname = tempname;
 save(fname,'P')
-cmd = sprintf('python mme2.py %s',fname);
+
+thism = mfilename('fullpath');
+[folder, name, ext] = fileparts(thism);
+
+cmd = sprintf('python %s/mme2.py %s',folder,fname);
 status = system(cmd);
 
 if status~=0

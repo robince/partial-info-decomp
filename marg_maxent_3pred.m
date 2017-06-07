@@ -5,9 +5,12 @@ Nvar = length(s);
 %     error('only 3 variables supported')
 % end
 
+thism = mfilename('fullpath');
+[folder, name, ext] = fileparts(thism);
+
 fname = tempname;
 save(fname,'P')
-cmd = sprintf('python mme3pred.py %s',fname);
+cmd = sprintf('python %s/mme3pred.py %s',folder,fname);
 status = system(cmd);
 
 if status~=0

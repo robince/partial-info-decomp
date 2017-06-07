@@ -6,9 +6,12 @@ if Nvar ~= 3
     error('only 3 variables supported')
 end
 
+thism = mfilename('fullpath');
+[folder, name, ext] = fileparts(thism);
+
 fname = tempname;
 save(fname,'P')
-cmd = sprintf('python pidbrojadist.py %s',fname);
+cmd = sprintf('python %s/pidbrojadist.py %s',folder,fname);
 status = system(cmd);
 
 if status~=0

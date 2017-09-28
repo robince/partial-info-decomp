@@ -1,5 +1,6 @@
 function I = gauss_mi(C, varsizes)
 
+% C = C + 0.1*eye(size(C));
 vs = varsizes;
 if length(vs)>2
     error('bivariate MI only')

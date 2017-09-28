@@ -1,4 +1,4 @@
-function pid = PID_dep_mvn(C, varsizes);
+function Id = PID_dep_mvn(C, varsizes);
 % 2 predictor PID with Idep for Gaussians
 
 vs = varsizes;
@@ -17,9 +17,12 @@ yidx = (vs(1)+1):(vs(1)+vs(2));
 zidx = (vs(1)+vs(2)+1):(vs(1)+vs(2)+vs(3));
 
 % extract blockwise covariance components
-Cxx = C(xidx,xidx);
-Cyy = C(yidx,yidx);
-Czz = C(zidx,zidx);
+% Cxx = C(xidx,xidx);
+% Cyy = C(yidx,yidx);
+% Czz = C(zidx,zidx);
+Cxx = eye(vs(1));
+Cyy = eye(vs(2));
+Czz = eye(vs(3));
 Cxy = C(xidx,yidx);
 Cxz = C(xidx,zidx);
 Cyz = C(yidx,zidx);
@@ -30,12 +33,13 @@ Cdiag(yidx,yidx) = Cyy;
 Cdiag(zidx,zidx) = Czz;
 
 IXY = gauss_mi(C,mivs);
-IY = gauss_mi(C([yidx zidx]:[yidx zidx]), vs(2:3));
+IY = gauss_mi(C([yidx zidx],[yidx zidx]), vs(2:3));
 Ct = zeros(vs(1)+vs(3));
+tzidx = (vs(1)+1):(vs(1)+vs(3));
 Ct(xidx,xidx) = Cxx;
-Ct(zidx,zidx) = Czz;
-Ct(xidx,zidx) = Cxz;
-Ct(zidx,xidx) = Cxz';
+Ct(tzidx,tzidx) = Czz;
+Ct(xidx,tzidx) = Cxz;
+Ct(tzidx,xidx) = Cxz';
 IX = gauss_mi(Ct, [vs(1) vs(3)]);
 
 

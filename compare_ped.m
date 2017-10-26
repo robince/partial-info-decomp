@@ -4,7 +4,7 @@ function lat = compare_ped(P)
 lat = lattice2d();
 
 % Imin
-lat = calc_pi_wb(lat, P, @Imin);
+lat = calc_pi(lat, P, @Imin);
 PImin = lat.PI;
 arr = sprintf('%6.4f ',PImin);
 fprintf(1,'PI with Imin    : [ %s ]\n',arr);

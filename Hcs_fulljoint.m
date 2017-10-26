@@ -157,6 +157,9 @@ if NA==3
     Ptrip(1).Paaa = Paaa;
 end
 
+% Hcs = Ptrip;
+% return
+
 % pointwise co-information
 cs = zeros([Am 1]);
 if NA==1
@@ -191,7 +194,7 @@ elseif NA==2
 %     keyboard
 %     cdsraw = cds;
     cs = Ppair(1).Paa .* cs;
-    cds = Ppair(1).Paa .* cds;
+%     cds = Ppair(1).Paa .* cds;
 elseif NA==3
     for a1=1:Am(1)
         for a2=1:Am(2)
@@ -209,7 +212,11 @@ elseif NA==3
                 % local entropy always positive
                 % if local coinformation positive then have overlap
                 cds(a1,a2,a3) = i;
+%                 if Ptrip.Paaa(a1,a2,a3)>0
+%                     fprintf(1,'[%d %d %d] : s1:  %6.3f  s2:  %6.3f  s3:  %6.3f  sj: %6.3f coi: %6.3f\n',a1,a2,a3,s1,s2,s3,sj123,i);
+%                 end
                 if i>0
+%                     keyboard
                     cs(a1,a2,a3) = i;   
                 else
                     % not counted as overlapping entropy
@@ -219,8 +226,10 @@ elseif NA==3
         end
     end
     cs = Ptrip(1).Paaa .* cs;
+    cds = Ptrip(1).Paaa .* cds;
 end
 
+% cds
 % cs
 locred = nansum(cs(:));
 Hcs = locred;

@@ -18,6 +18,13 @@ end
 PA(NA).Pa = []; % intialize struct
 Am = zeros(1,NA); % number of symbols in each element
 
+if NA==3 && sum(cellfun(@length,A))==6
+    % don't need to solve pairwise maxent - no third order interactions
+    % possible because of structure of multivariate atoms
+    Hcs = Hcs_fulljoint(A, Pjoint);
+    return
+end
+
 % sort variables within each source
 A = cellfun(@sort, A, 'Unif',false);
 

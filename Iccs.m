@@ -210,6 +210,9 @@ elseif NA==2
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
                 ii12 = log2(num ./ den);
                 
+%                 fprintf(1,'[%d %d %d] : ds1:  %6.3f  ds2:  %6.3f   dsj:  %6.3f   coi:  %6.3f\n',a1,a2,si,ds1,ds2,dsj,-ii12)
+
+                
                 overlap = ds1 + ds2 - dsj;
                 
                 if sign(ds1)==sign(ds2)
@@ -250,8 +253,10 @@ elseif NA==3
                         % change of surprise has same sign for all 3
                         % variables, so possibility of overlap
                         if sign(ds123)~=sign(ds1)
+                            
+%                         if sign(ds123)~=sign(ds1) || sign(ds12)~=sign(ds1) || sign(ds13) ~=sign(ds1) || sign(ds23) ~= sign(ds1)
 %                             fprintf(1,'Warning [%d %d %d %d] : DSJ sign flip  dsj: %6.3f  ds1: %6.3f  ds2: %6.3f ds3: %6.3f\n',a1,a2,a3,si,ds123,ds1,ds2,ds3)
-                            continue
+%                             continue
                         end
                         overlap = ds1 + ds2 + ds3 - ds12 - ds13 - ds23 + ds123;
                         if sign(overlap)==sign(ds1)
@@ -270,6 +275,7 @@ elseif NA==3
     end
     cds = Ptrip(1).Paaas .* cds;
 end
+% cds
 locred = nansum(cds(:));
 Iccs = locred;
 

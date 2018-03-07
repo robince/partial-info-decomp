@@ -39,9 +39,9 @@ chCyy = chol(Cyy);
 chCzz = chol(Czz);
 
 % Kay & Ince eq. D2
-P = pinv(chCxx)*Cxy*pinv(chCyy);
-Q = pinv(chCxx)*Cxz*pinv(chCzz);
-R = pinv(chCyy)*Cyz*pinv(chCzz);
+P = pinv(chCxx)'*Cxy*pinv(chCyy);
+Q = pinv(chCxx)'*Cxz*pinv(chCzz);
+R = pinv(chCyy)'*Cyz*pinv(chCzz);
 
 % standard mutual informations
 mivs = [vs(1)+vs(2)  vs(3)];

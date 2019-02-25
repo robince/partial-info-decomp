@@ -5,7 +5,7 @@ import scipy as sp
 import dit
 import scipy.io
 import itertools
-from dit.algorithms.scipy_optimizers import maxent_dist
+from dit.algorithms.distribution_optimizers import maxent_dist
 
 fname = sys.argv[1]
 dat = sp.io.loadmat(fname)

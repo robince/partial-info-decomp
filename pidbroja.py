@@ -4,7 +4,7 @@ import numpy as np
 import scipy as sp
 import dit
 import scipy.io
-from dit.algorithms.scipy_optimizers import pid_broja
+from dit.pid import PID_BROJA
 
 
 fname = sys.argv[1]
@@ -17,13 +17,13 @@ if Nvar != 3:
 
 d = dit.Distribution(*zip(*np.ndenumerate(P)))
 
-x = pid_broja(d, [[0],[1]], [2])
+x = PID_BROJA(d, [[0],[1]], [2])
 
 pid = np.zeros(4)
-pid[0] = x.R
-pid[1] = x.U0
-pid[2] = x.U1
-pid[3] = x.S
+pid[0] = x.get_partial(((0,), (1,)))
+pid[1] = x.get_partial(((0,),))
+pid[2] = x.get_partial(((1,),))
+pid[3] = x.get_partial(((0,1),))
 
 dat['pid'] = pid
 sp.io.savemat(fname,dat)

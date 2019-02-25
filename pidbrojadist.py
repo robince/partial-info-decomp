@@ -4,11 +4,11 @@ import numpy as np
 import scipy as sp
 import dit
 import scipy.io
-from dit.algorithms.scipy_optimizers import BROJAOptimizer
+from dit.algorithms.distribution_optimizers import BROJABivariateOptimizer
 
 def pid_broja_dist(dist, sources, target, rv_mode=None):
-    broja = BROJAOptimizer(dist, sources, target, rv_mode)
-    broja.optimize()
+    broja = BROJABivariateOptimizer(dist, sources, target, rv_mode)
+    broja.optimize(niter=10)
     opt_dist = broja.construct_dist()
     return opt_dist
 

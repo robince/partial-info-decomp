@@ -17,8 +17,8 @@ if nargin>1
     if sum(varsizes) ~= size(Cfull,1)
         error('wrong number of variables specified')
     end
-    if length(varsizes)~=3
-        error('only 2 variables supported')
+    if length(varsizes)~=3 && length(varsizes)~=4
+        error('only 2 or 3 predictors supported')
     end
 
     % calc Icap for each node

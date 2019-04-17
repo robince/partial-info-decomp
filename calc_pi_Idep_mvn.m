@@ -59,11 +59,11 @@ halflog2det = @(X) sum(log2(diag(chol(X))));
 % Dependency lattice edges (Kay & Ince Table 9)
 b = IX;
 
-inum = halflog2det(eye(vs(1)) - R*Q'*Q*R');
-iden = halflog2det(eye(vs(2))-Q'*Q) + halflog2det(eye(vs(2))-R'*R);
+inum = halflog2det(eye(vs(2)) - R*Q'*Q*R');
+iden = halflog2det(eye(vs(3))-Q'*Q) + halflog2det(eye(vs(3))-R'*R);
 i = inum - iden - IY;
 
-knum = halflog2det(eye(vs(1)) - P'*P);
+knum = halflog2det(eye(vs(2)) - P'*P);
 Ct = zeros(sum(vs));
 Ct(xidx,xidx) = eye(vs(1));
 Ct(yidx,yidx) = eye(vs(2));

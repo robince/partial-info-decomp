@@ -148,7 +148,7 @@ if NA==2
     dhy = pycs - py;
     dhxy = pxycs - pxy;
     lnii = dhx + dhy - dhxy;
-    keep = sign(dhx) == sign(lnii) & sign(dhx) == sign(dhy);
+    keep = sign(dhx) == sign(lnii) & sign(dhx) == sign(dhy) & sign(dhx) == sign(dhxy);
     lnii(~keep) = 0;
     
     Iccs = nanmean(lnii);

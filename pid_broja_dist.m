@@ -9,7 +9,7 @@ end
 thism = mfilename('fullpath');
 [folder, name, ext] = fileparts(thism);
 
-fname = tempname;
+fname = [tempname '.mat'];
 save(fname,'P')
 cmd = sprintf('python %s/pidbrojadist.py %s',folder,fname);
 status = system(cmd);
@@ -21,4 +21,4 @@ end
 dat = load(fname);
 Pb = dat.Pb;
 
-delete([fname '.mat'])
+delete(fname)

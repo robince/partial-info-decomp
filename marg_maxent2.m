@@ -2,7 +2,7 @@ function P2 = marg_maxent2(P)
 s = size(P);
 Nvar = length(s);
 
-fname = tempname;
+fname = [tempname '.mat'];
 save(fname,'P')
 
 thism = mfilename('fullpath');
@@ -18,4 +18,4 @@ end
 dat = load(fname);
 P2 = dat.P2;
 
-delete([fname '.mat'])
+delete(fname)

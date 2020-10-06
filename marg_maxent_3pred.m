@@ -8,7 +8,7 @@ Nvar = length(s);
 thism = mfilename('fullpath');
 [folder, name, ext] = fileparts(thism);
 
-fname = tempname;
+fname = [tempname '.mat'];
 save(fname,'P')
 cmd = sprintf('python %s/mme3pred.py %s',folder,fname);
 status = system(cmd);
@@ -20,4 +20,4 @@ end
 dat = load(fname);
 Pme = dat.Pme;
 
-delete([fname '.mat'])
+delete(fname)

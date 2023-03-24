@@ -1,4 +1,4 @@
-function pid = calcpid(SA, Na, SB, Nb, T, Nt, Ntrl)
+function [pid P] = calcpid(SA, Na, SB, Nb, T, Nt, Ntrl)
 % Sample probablity distributions from discrete data and use them 
 % to calculate a PID with Iccs
 % SA - source A (integer values in range [0, Na-1]

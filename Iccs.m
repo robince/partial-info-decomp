@@ -202,9 +202,9 @@ elseif NA==2
     for a1=1:Am(1)
         for a2=1:Am(2)
             for si=1:Sm
-                dsj = log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) );
-                ds1 = log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) );
-                ds2 = log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) );
+                dsj = (log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) ));
+                ds1 = (log2( Pele(1).Pas(a1,si) ./ (Pele(1).Pa(a1)*Ps(si)) ));
+                ds2 = (log2( Pele(2).Pas(a2,si) ./ (Pele(2).Pa(a2)*Ps(si)) ));
                 
                 num = Pele(1).Pa(a1) * Pele(2).Pa(a2) * Ps(si) * Ppair(1).Paas(a1,a2,si);
                 den = Pele(1).Pas(a1,si) * Pele(2).Pas(a2,si) * Ppair(1).Paa(a1,a2);
@@ -248,15 +248,15 @@ elseif NA==3
                     ds12 = (log2( Ppair(1).Paas(a1,a2,si) / (Ppair(1).Paa(a1,a2)*Ps(si)) ));
                     ds13 = (log2( Ppair(2).Paas(a1,a3,si) / (Ppair(2).Paa(a1,a3)*Ps(si)) ));
                     ds23 = (log2( Ppair(3).Paas(a2,a3,si) / (Ppair(3).Paa(a2,a3)*Ps(si)) ));
-                    
-                    if (sign(ds1)==sign(ds2)) && (sign(ds2)==sign(ds3))
+
+                    if (sign(ds1)==sign(ds2)) && (sign(ds2)==sign(ds3)) 
                         % change of surprise has same sign for all 3
                         % variables, so possibility of overlap
                         if sign(ds123)~=sign(ds1)
                             
 %                         if sign(ds123)~=sign(ds1) || sign(ds12)~=sign(ds1) || sign(ds13) ~=sign(ds1) || sign(ds23) ~= sign(ds1)
 %                             fprintf(1,'Warning [%d %d %d %d] : DSJ sign flip  dsj: %6.3f  ds1: %6.3f  ds2: %6.3f ds3: %6.3f\n',a1,a2,a3,si,ds123,ds1,ds2,ds3)
-%                             continue
+                            continue
                         end
                         overlap = ds1 + ds2 + ds3 - ds12 - ds13 - ds23 + ds123;
                         if sign(overlap)==sign(ds1)
@@ -279,6 +279,16 @@ end
 locred = nansum(cds(:));
 Iccs = locred;
 
+function y = fixsign(x)
+% fix the sign of things close to zero following dit (which uses
+% np.isclose)
+% absolute(a - b) <= (atol + rtol * absolute(b))
+atol = 1e-8;
+if abs(x) <= atol
+    y = 0.0;
+else
+    y = x;
+end
 
 function Pnew = copy_var(P, var, newpos)
 % form joint distribution with variable var copied to axis position newpos

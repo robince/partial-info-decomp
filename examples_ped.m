@@ -63,6 +63,19 @@ Pxxy(2,2,1) = 0.25;
 fprintf(1,'XOR PID\n')
 compare_ped(Pxxy);
 
+%% GB PED
+Pxyz = zeros(2,2,2);
+p = 1/2;
+Pxyz(1,1,1) = p;
+Pxyz(2,2,2) = p;
+
+lat = lattice3d();
+lat = calc_pe(lat,Pxyz,@Hcs);
+
+fprintf(1,'GB PED\n')
+lat.PI
+
+
 %% AND PED
 Pxxy = zeros(2,2,2);
 Pxxy(1,1,1) = 0.25;
@@ -73,6 +86,22 @@ lat = lattice3d();
 lat = calc_pe(lat,Pxxy,@Hcs);
 fprintf(1,'AND PED\n')
 lat.PI
+
+%% GBAND
+Pxxy = zeros(4,4,4);
+Pxxy(1,1,1) = 1./8;
+Pxxy(1,2,1) = 1./8;
+Pxxy(2,1,1) = 1./8;
+Pxxy(2,2,2) = 1./8;
+Pxxy(3,3,3) = 1./8;
+Pxxy(3,4,3) = 1./8;
+Pxxy(4,3,3) = 1./8;
+Pxxy(4,4,4) = 1./8;
+lat = lattice3d();
+lat = calc_pe(lat,Pxxy,@Hcs);
+fprintf(1,'GB-AND\n')
+lat.PI
+
 %% AND PID
 Pxxy = zeros(2,2,2);
 Pxxy(1,1,1) = 0.25;

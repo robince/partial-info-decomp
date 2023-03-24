@@ -63,6 +63,25 @@ Pxxy(2,2,2) = 0.25;
 fprintf(1,'1 bit copy\n')
 compare(lattice2d(),Pxxy);
 
+%% correlated one bit copy
+Pxxy = zeros(2,2,2);
+c = 0.5;
+Pxxy(1,1,1) = (1+c)/4;
+Pxxy(1,2,1) = (1-c)/4;
+Pxxy(2,1,2) = (1-c)/4;
+Pxxy(2,2,2) = (1+c)/4;
+
+fprintf(1,'c=0.5 1 bit copy\n')
+compare(lattice2d(),Pxxy);
+
+
+%% no bit copy
+Pxxy = zeros(2,2,2);
+Pxxy(:) = 1./8;
+
+fprintf(1,'no-bit copy\n')
+compare(lattice2d(),Pxxy);
+
 %% two bit copy (independent bits)
 % UNQ : Griffith et al. (2014) Fig. 1
 % UNQ : Griffith et al. (2012) Fig. 3
@@ -120,7 +139,7 @@ latpi = compare(lattice2d(),Pxxy);
 
 %% AND
 Pxxy = zeros(2,2,2);
-Pxxy(1,1,1) = 0.25;
+Pxxy(1,1,1) = 0.25; 
 Pxxy(1,2,1) = 0.25;
 Pxxy(2,1,1) = 0.25;
 Pxxy(2,2,2) = 0.25;
@@ -249,6 +268,20 @@ compare(lattice2d(),Pxxy);
 Pxxy = zeros(2,2,2);
 Pxxy(1,1,1) = 0.5;
 Pxxy(1,2,2) = 0.25;
-Pxxy(2,1,2) = 0.25;fprintf(1,'Reduced OR (Lizier)\n');
+Pxxy(2,1,2) = 0.25;
+fprintf(1,'Reduced OR (Lizier)\n');
 lat = compare(lattice2d(),Pxxy);
 
+%% GBAND
+%% GBAND
+Pxxy = zeros(4,4,4);
+Pxxy(1,1,1) = 1./8;
+Pxxy(1,2,1) = 1./8;
+Pxxy(2,1,1) = 1./8;
+Pxxy(2,2,2) = 1./8;
+Pxxy(3,3,3) = 1./8;
+Pxxy(3,4,3) = 1./8;
+Pxxy(4,3,3) = 1./8;
+Pxxy(4,4,4) = 1./8;
+fprintf(1,'GBAND\n');
+lat = compare(lattice2d(),Pxxy);

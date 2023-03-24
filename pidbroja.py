@@ -13,7 +13,7 @@ P = np.squeeze(dat['P'])
 s = P.shape
 Nvar = len(P.shape)
 if Nvar != 3:
-    raise ValueError, "not supported"
+    raise ValueError("not supported")
 
 d = dit.Distribution(*zip(*np.ndenumerate(P)))
 

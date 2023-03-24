@@ -7,4 +7,5 @@ dtemp	= diff([temp;max(temp)+1]);
 count 	= diff(find([1;dtemp]));
 indx 	= temp(dtemp>0);
 PrPos(indx)= count ./ numel(data);	% probability
-Pr = [1-sum(PrPos)  PrPos];
+Pr = [max(1-sum(PrPos),0)  PrPos];
+Pr = Pr./sum(Pr);

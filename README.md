@@ -119,6 +119,7 @@ The functions below implement the PID for multivariate normal / Gaussian variabl
 - [`Iccs_mvn.m`](Iccs_mvn.m) : Redundancy measure based on pointwise common change in surprisal.
 - [`calc_pi_mvn.m`](calc_pi_mvn.m) : Alternative PID decomposition on the lattice which normalises non-zero PI values across non-disjoint nodes of the same height in the lattice, to avoid overcounting.
 - [`examples_2dmvn.m`](examples_2dmvn.m) : Run Gaussian examples.
+- [`pid_mvn.py`](pid_mvn.m) : Python package to implement PID using the Iccs redundancy measure. See the [PyPID_mvn](https://github.com/AlessandroCorsini/PyPID_mvn) repo for more info on usage.
 
 
 ### Retired experimental functions

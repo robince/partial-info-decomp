@@ -286,46 +286,7 @@ def calc_pi_node(lat, ni, nonneg=False, normlevels=False):
 
 def normalise_levels(lat, children):
     # normalize to correct for non-additivity of non-disjoint nodes
-
-    # values for this set of children
-    PIraw = lat.PIraw[children]
-    levels = lat.level[children]
-    labels = lat.labels[children]
-    A = lat.A[children]
-    normPI = PIraw.copy()
-
-    for li in range(1, lat.Nlevels + 1):
-        nodes = np.where(levels == li)[0]
-        levelPI = PIraw[nodes]
-        posPInodes = nodes[np.abs(levelPI) > 1e-15]
-        posPIvars = np.concatenate(A[posPInodes])
-        posPIvars = np.concatenate([np.array(var) for var in posPIvars])
-
-        if len(posPIvars) != len(np.unique(posPIvars)):
-            # have non-disjoint positive PI contributions at this level
-
-            # using structure of 3rd order lattice (might need more logic to
-            # determine pairwise disjoint-ness for higher order lattices)
-            if li == 4:
-                # special case level 4 for 3 variable lattice
-                # one node contains all variables
-                fullnode = np.where(labels == '{12}{13}{23}')[0]
-                if not fullnode or PIraw[fullnode] < 1e-15:
-                    # all sources at this level are disjoint so no
-                    # normalization required
-                    continue
-                elif len(posPInodes) == 1:
-                    # only {12}{13}{23} is non-zero so no normalization
-                    # required
-                    continue
-
-                # only normalize by 2 here even if more posPInodes because
-                # there are only 2 disjoint copies at this level
-                normPI[posPInodes] = PIraw[posPInodes] / 2
-            else:
-                normPI[posPInodes] = PIraw[posPInodes] / len(posPInodes)
-
-    return normPI
+    raise NotImplementedError('normalise_levels not implemented')
 
 def recurse_children(lat, ni, children):
     children.extend(lat.children[ni])
